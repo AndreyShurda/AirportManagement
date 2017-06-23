@@ -1,0 +1,158 @@
+package com.andrey.main.dl.models;
+
+import com.andrey.main.dl.data.Gender;
+import com.andrey.main.dl.data.ClassType;
+
+import java.time.LocalDate;
+
+public class Passenger {
+    private long id;
+    private String flightNumber;
+    private String firstName;
+    private String lastName;
+    private String nationality;
+    private String passport;
+    private LocalDate birthday;
+    private Gender gender;
+    private ClassType classType;
+
+    public Passenger() {
+    }
+
+    public Passenger(String flightNumber, String firstName, String lastName, String nationality, String passport, LocalDate birthday, Gender gender, ClassType classType) {
+        this.flightNumber = flightNumber;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.nationality = nationality;
+        this.passport = passport;
+        this.birthday = birthday;
+        this.gender = gender;
+        this.classType = classType;
+    }
+
+    public Passenger(long id, String flightNumber, String firstName, String lastName, String nationality, String passport, LocalDate birthday, Gender gender, ClassType classType) {
+        this(flightNumber, firstName, lastName, nationality, passport, birthday, gender, classType);
+        this.id = id;
+
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getFlightNumber() {
+        return flightNumber;
+    }
+
+    public void setFlightNumber(String flightNumber) {
+        this.flightNumber = flightNumber;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getNationality() {
+        return nationality;
+    }
+
+    public void setNationality(String nationality) {
+        this.nationality = nationality;
+    }
+
+    public String getPassport() {
+        return passport;
+    }
+
+    public void setPassport(String passport) {
+        this.passport = passport;
+    }
+
+    public LocalDate getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(LocalDate birthday) {
+        this.birthday = birthday;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
+
+    public ClassType getClassType() {
+        return classType;
+    }
+
+    public void setClassType(ClassType classType) {
+        this.classType = classType;
+    }
+
+    @Override
+    public String toString() {
+        return "Passenger{" +
+                "id=" + id +
+                ", flightNumber=" + flightNumber +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", nationality='" + nationality + '\'' +
+                ", passport='" + passport + '\'' +
+                ", birthday=" + birthday +
+                ", gender=" + gender +
+                ", ticketType=" + classType +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Passenger passenger = (Passenger) o;
+
+        if (flightNumber != null ? !flightNumber.equals(passenger.flightNumber) : passenger.flightNumber != null)
+            return false;
+        if (firstName != null ? !firstName.equals(passenger.firstName) : passenger.firstName != null) return false;
+        if (lastName != null ? !lastName.equals(passenger.lastName) : passenger.lastName != null) return false;
+        if (nationality != null ? !nationality.equals(passenger.nationality) : passenger.nationality != null)
+            return false;
+        if (passport != null ? !passport.equals(passenger.passport) : passenger.passport != null) return false;
+        if (birthday != null ? !birthday.equals(passenger.birthday) : passenger.birthday != null) return false;
+        if (gender != passenger.gender) return false;
+        return classType == passenger.classType;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = flightNumber != null ? flightNumber.hashCode() : 0;
+        result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
+        result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
+        result = 31 * result + (nationality != null ? nationality.hashCode() : 0);
+        result = 31 * result + (passport != null ? passport.hashCode() : 0);
+        result = 31 * result + (birthday != null ? birthday.hashCode() : 0);
+        result = 31 * result + (gender != null ? gender.hashCode() : 0);
+        result = 31 * result + (classType != null ? classType.hashCode() : 0);
+        return result;
+    }
+}
