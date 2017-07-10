@@ -1,22 +1,27 @@
 package com.andrey.main.ui;
 
+import com.andrey.main.bl.controllers.AuthorizationController;
 import com.andrey.main.bl.controllers.MainController;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
-import static com.andrey.main.dl.dao.InitialData.*;
 import static com.andrey.main.dl.dao.InitialData.LOCALE_VALUE;
 import static com.andrey.main.dl.dao.InitialData.PATH_BUNDLES_LOCALE;
 
 public class FXMain extends Application {
-    private Stage primaryStage;
+    public static Stage primaryStage;
 
     public static void main(String[] args) {
         launch(args);
@@ -25,37 +30,44 @@ public class FXMain extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
         this.primaryStage = primaryStage;
-        InitRootLayout();
+
+        loadLogin();
+//        initRootLayout(primaryStage);
     }
 
-    private void InitRootLayout() throws IOException {
+//    private void loadLogin(Stage primaryStage) throws IOException {
+    private void loadLogin() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader();
-        URL resource = getClass().getResource("/fxml/main.fxml");
-
+        URL resource = getClass().getResource("/fxml/authorization.fxml");
         fxmlLoader.setLocation(resource);
         fxmlLoader.setResources(ResourceBundle.getBundle(PATH_BUNDLES_LOCALE, LOCALE_VALUE));
+        Parent fxmlMain = fxmlLoader.load();
 
-        VBox rootLayout = (VBox) fxmlLoader.load();
-        MainController mainController = fxmlLoader.getController();
-
-//        CURRENT_USER = GUEST;
-//        CURRENT_USER = USER_ADMIN;
-
-//        mainController.accessToMenu();
-        mainController.changeToGuest();
+        AuthorizationController mainController = fxmlLoader.getController();
         mainController.setMainStage(primaryStage);
 
-
-        primaryStage.setTitle(fxmlLoader.getResources().getString("airport_management"));
-
-        Scene scene = new Scene(rootLayout);
-        scene.getStylesheets().add(getClass().getResource("/css/AppStyle.css").toExternalForm());
+        primaryStage.setTitle(fxmlLoader.getResources().getString("authorization"));
+        Scene scene = new Scene(fxmlMain);
 
         primaryStage.setScene(scene);
-        primaryStage.setMinWidth(880);
-        primaryStage.setMinHeight(520);
+        primaryStage.setResizable(false);
+//        primaryStage.initStyle(StageStyle.UNDECORATED);
+        primaryStage.setAlwaysOnTop(true);
         primaryStage.show();
+
+        scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if (event.isAltDown() && event.isControlDown() && event.isShiftDown()) {
+                    mainController.initCreateForm();
+                    primaryStage.hide();
+                }
+            }
+        });
     }
 
-
+    @Override
+    public void stop() throws Exception {
+        System.exit(0);
+    }
 }

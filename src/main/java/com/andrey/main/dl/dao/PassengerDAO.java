@@ -1,21 +1,13 @@
 package com.andrey.main.dl.dao;
 
-import com.andrey.main.dl.data.ClassType;
-import com.andrey.main.dl.data.Gender;
 import com.andrey.main.dl.models.Passenger;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.time.LocalDate;
-import java.util.ArrayList;
+import org.apache.log4j.Logger;
 import java.util.List;
-
-import static com.andrey.main.dl.dao.DBUtil.*;
-import static com.andrey.main.dl.dao.InitialData.TABLE_PASSENGERS;
+import static com.andrey.main.dl.dao.HibernateDBUtil.operationCRUD;
 
 public class PassengerDAO implements OperationDAO<Passenger> {
     private static PassengerDAO instance = new PassengerDAO();
-//    private static final String TABLE_PASSENGERS = "passengers";
+    private static final Logger log = Logger.getLogger(PassengerDAO.class);
 
     private PassengerDAO() {
     }
@@ -24,45 +16,50 @@ public class PassengerDAO implements OperationDAO<Passenger> {
         return instance;
     }
 
-
     @Override
     public void add(Passenger record) {
-        String query = "insert into " + TABLE_PASSENGERS + " (idFlight, firstName, lastName, nationality," +
-                " passport, birthday, gender, classType) values(?,?,?,?,?,?,?,?)";
-        doQuery(record, query);
+        log.info("add record: " + record);
+        operationCRUD(session -> session.save(record));
     }
 
     @Override
-    public void delete(Passenger record) {
-        createConnection();
-        String query = "delete from " + TABLE_PASSENGERS + " WHERE idPassenger =?";
-        try {
-            executeQuery(query, String.valueOf(record.getId()));
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            closeConnection();
-        }
+    public void delete(long id) {
+        Passenger passenger = getById(id);
+        log.info("add record: " + passenger);
+        operationCRUD(session -> {
+            session.delete(passenger);
+        });
     }
 
     @Override
     public void update(Passenger record) {
-        String query = "UPDATE " + TABLE_PASSENGERS + " SET idFlight=?, firstName=?, lastName=?, nationality=?," +
-                "passport=?, birthday=?, gender=?, classType=? WHERE  idPassenger =" + record.getId();
-        doQuery(record, query);
+        log.info("add update: " + record);
+        operationCRUD(session -> session.update(record));
+    }
+
+
+    @Override
+    public Passenger getById(long id) {
+        final Passenger[] passenger = new Passenger[1];
+        operationCRUD(session -> {
+            passenger[0] = session.get(Passenger.class, id);
+        });
+        return passenger[0];
     }
 
     @Override
     public List<Passenger> getAll() {
-        String query = "select idPassenger, idFlight, firstName, lastName, nationality, passport, birthday, gender, classType " +
-                "from " + TABLE_PASSENGERS;
-        return getPassengers(query);
+        final List[] list = new List[1];
+        operationCRUD(session -> {
+            list[0] = session.createQuery("FROM Passenger ").list();
+        });
+        log.info("getAll records: " + list[0]);
+        return list[0];
     }
 
     public List<Passenger> searchByFirstName(String text) {
         return searchByColumn("firstName", text);
     }
-
 
     public List<Passenger> searchByLastName(String text) {
         return searchByColumn("lastName", text);
@@ -73,77 +70,11 @@ public class PassengerDAO implements OperationDAO<Passenger> {
     }
 
     private List<Passenger> searchByColumn(String columnName, String value) {
-        String query = "select idPassenger, idFlight, firstName, lastName, nationality, passport, birthday, gender, classType " +
-                "from " + TABLE_PASSENGERS +
-                " where " + columnName + " like '" + value + "%'";
-        return getPassengers(query);
+        final List[] list = new List[1];
+        operationCRUD(session -> {
+            list[0] = session.createQuery("FROM Passenger where " + columnName + " like '" + value + "%'").list();
+        });
+        log.info("searchBy" + columnName + ": " + list[0]);
+        return list[0];
     }
-
-    private List<Passenger> getPassengers(String query) {
-        createConnection();
-        List<Passenger> passengers = new ArrayList<>();
-//        String query = "select idPassenger, idFlight, firstName, lastName, nationality, passport, birthday, gender, classType " +
-//                "from " + TABLE_PASSENGERS;
-
-        try {
-            ResultSet resultSet = executeQuery(query);
-
-//            ResultSetMetaData metaData = resultSet.getMetaData();
-//            for (int i = 1; i <= metaData.getColumnCount(); i++) {
-//                System.out.print(metaData.getColumnName(i) + "\t");
-//            }
-//            System.out.println();
-
-            while (resultSet.next()) {
-                Integer idPassenger = Integer.valueOf(resultSet.getString("idPassenger"));
-                String numberFlight = resultSet.getString("idFlight");
-                String firstName = resultSet.getString("firstName");
-                String lastName = resultSet.getString("lastName");
-                String nationality = resultSet.getString("nationality");
-                String passport = resultSet.getString("passport");
-                LocalDate birthday = resultSet.getDate("birthday").toLocalDate();
-                Gender gender = Gender.values()[resultSet.getInt("gender")];
-                ClassType classType = ClassType.values()[resultSet.getInt("classType")];
-
-//                for (int i = 0; i < metaData.getColumnCount(); i++) {
-//                    System.out.print(resultSet.getString(i + 1) + "\t");
-//                }
-//                System.out.println();
-                passengers.add(new Passenger(idPassenger,
-                        numberFlight,
-                        firstName,
-                        lastName,
-                        nationality,
-                        passport,
-                        birthday,
-                        gender,
-                        classType)
-                );
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            closeConnection();
-        }
-        return passengers;
-    }
-
-    private void doQuery(Passenger record, String query) {
-        createConnection();
-        try {
-            executeQuery(query,
-                    record.getFlightNumber(),
-                    record.getFirstName(),
-                    record.getLastName(),
-                    record.getNationality(),
-                    record.getPassport(),
-                    record.getBirthday().toString(),
-                    String.valueOf(record.getGender().ordinal()),
-                    String.valueOf(record.getClassType().ordinal()));
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        closeConnection();
-    }
-
 }

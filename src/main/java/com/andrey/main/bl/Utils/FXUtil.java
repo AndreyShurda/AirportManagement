@@ -10,6 +10,11 @@ import javafx.scene.control.Label;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.util.ResourceBundle;
+
+import static com.andrey.main.dl.dao.InitialData.LOCALE_VALUE;
+import static com.andrey.main.dl.dao.InitialData.PATH_BUNDLES_LOCALE;
+
 public class FXUtil {
 
     public static Stage showDialog(Parent fxmlEdit, Stage editDialogStage) {
@@ -33,7 +38,7 @@ public class FXUtil {
     }
 
     public static String updateCountLable(ObservableList list) {
-        return "Count of row: " + list.size();
+        return ResourceBundle.getBundle(PATH_BUNDLES_LOCALE, LOCALE_VALUE).getString("count_of_rows") + " " + list.size();
     }
 
 }

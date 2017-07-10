@@ -1,13 +1,15 @@
 package com.andrey.main.bl.controllers;
 
+import com.andrey.main.bl.Utils.DialogManager;
 import com.andrey.main.bl.Utils.FXUtil;
 import com.andrey.main.bl.access.AccessHandler;
 import com.andrey.main.bl.access.MyPermission;
 import com.andrey.main.bl.access.PermissionAction;
-import com.andrey.main.bl.operations.MenuItemsEdit;
-import com.andrey.main.dl.dao.PassengerDAO;
+import com.andrey.main.bl.operations.ProxyOperations;
+import com.andrey.main.bl.services.PassengerService;
 import com.andrey.main.dl.data.Gender;
 import com.andrey.main.dl.data.ClassType;
+import com.andrey.main.dl.models.Flight;
 import com.andrey.main.dl.models.Passenger;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -30,9 +32,12 @@ import java.util.ResourceBundle;
 
 import static com.andrey.main.dl.dao.InitialData.LOCALE_VALUE;
 import static com.andrey.main.dl.dao.InitialData.PATH_BUNDLES_LOCALE;
+import static javafx.scene.control.ButtonType.CANCEL;
+import static javafx.scene.control.ButtonType.NO;
+import static javafx.scene.control.ButtonType.YES;
 
 
-public class PassengerController implements Initializable, MenuItemsEdit {
+public class PassengerController implements Initializable, ProxyOperations {
     @FXML
     private RadioButton rbByFirstName;
     @FXML
@@ -48,7 +53,7 @@ public class PassengerController implements Initializable, MenuItemsEdit {
     @FXML
     private Label labelCount;
     @FXML
-    private TableColumn columnFlightNumber;
+    private TableColumn<Flight, String> columnFlightNumber;
     @FXML
     private TableColumn<Passenger, String> columnFirstName;
     @FXML
@@ -65,7 +70,7 @@ public class PassengerController implements Initializable, MenuItemsEdit {
     private TableColumn<Passenger, ClassType> columnClassType;
 
     private ObservableList<Passenger> passengers = FXCollections.observableArrayList();
-    private PassengerDAO passengerDAO = PassengerDAO.getInstance();
+    private PassengerService passengerService = new PassengerService();
 
     private Stage mainStage;
     private URL location;
@@ -75,7 +80,7 @@ public class PassengerController implements Initializable, MenuItemsEdit {
     private FXMLLoader fxmlLoader = new FXMLLoader();
     private EditPassengerController editPassengerController;
     private Stage editDialogStage;
-    private MenuItemsEdit proxyController;
+    private ProxyOperations proxyController;
 
     public void setMainStage(Stage mainStage) {
         this.mainStage = mainStage;
@@ -94,7 +99,7 @@ public class PassengerController implements Initializable, MenuItemsEdit {
         initEditDialog();
         updateCountLable();
 
-        proxyController = (MenuItemsEdit) AccessHandler.newInstance(this);
+        proxyController = (ProxyOperations) AccessHandler.newInstance(this);
     }
 
     private void initSearchPanel() {
@@ -119,7 +124,7 @@ public class PassengerController implements Initializable, MenuItemsEdit {
     }
 
     private void initTable() {
-        columnFlightNumber.setCellValueFactory(new PropertyValueFactory<Passenger, String>("flightNumber"));
+        columnFlightNumber.setCellValueFactory(new PropertyValueFactory<Flight, String>("flight"));
         columnFirstName.setCellValueFactory(new PropertyValueFactory<Passenger, String>("firstName"));
         columnLastName.setCellValueFactory(new PropertyValueFactory<Passenger, String>("lastName"));
         columnNationality.setCellValueFactory(new PropertyValueFactory<Passenger, String>("nationality"));
@@ -128,7 +133,7 @@ public class PassengerController implements Initializable, MenuItemsEdit {
         columnGender.setCellValueFactory(new PropertyValueFactory<Passenger, Gender>("gender"));
         columnClassType.setCellValueFactory(new PropertyValueFactory<Passenger, ClassType>("classType"));
 
-        passengers.addAll(passengerDAO.getAll());
+        passengers.addAll(passengerService.getAll());
 
         tablePassengers.setItems(passengers);
     }
@@ -175,14 +180,18 @@ public class PassengerController implements Initializable, MenuItemsEdit {
 
     private void editPassenger() {
         Passenger selectedPassenger = (Passenger) tablePassengers.getSelectionModel().getSelectedItem();
+//        System.out.println(selectedPassenger);
+        int selectedIndex = tablePassengers.getSelectionModel().getSelectedIndex();
         editPassengerController.setPassenger(selectedPassenger);
         showDialog();
         Passenger passengerEdit = editPassengerController.getPassenger();
 //        System.out.println("editRow" + passengerEdit);
-        if (!selectedPassenger.equals(passengerEdit)) {
-            passengerDAO.update(passengerEdit);
-            passengers.set(tablePassengers.getSelectionModel().getSelectedIndex(), passengerEdit);
-        }
+//        System.out.println("selectedPassenger" + passengerEdit);
+//        if (!selectedPassenger.equals(passengerEdit)) {
+//            System.out.println("save");
+        passengerService.update(passengerEdit);
+        passengers.set(selectedIndex, passengerEdit);
+//        }
     }
 
     private void showDialog() {
@@ -198,14 +207,17 @@ public class PassengerController implements Initializable, MenuItemsEdit {
         editPassengerController.setPassenger(new Passenger());
         showDialog();
         Passenger newPassenger = editPassengerController.getPassenger();
-//        System.out.println("newFlight = " + newPassenger);
-        passengerDAO.add(newPassenger);
-        updateTable();
+        System.out.println(newPassenger);
+        System.out.println(newPassenger.hashCode());
+        if (newPassenger.hashCode() != 0) {
+            passengerService.add(newPassenger);
+            updateTable();
+        }
     }
 
-    private void updateTable() {
+    public void updateTable() {
         passengers.clear();
-        passengers.addAll(passengerDAO.getAll());
+        passengers.addAll(passengerService.getAll());
     }
 
     @Override
@@ -221,10 +233,14 @@ public class PassengerController implements Initializable, MenuItemsEdit {
     }
 
     @Override
-    @MyPermission( PermissionAction.ADMIN)
+    @MyPermission(PermissionAction.ADMIN)
     public void delete() {
-        passengerDAO.delete((Passenger) tablePassengers.getSelectionModel().getSelectedItem());
-        passengers.remove(tablePassengers.getSelectionModel().getSelectedIndex());
+        boolean yes = DialogManager.showInfoDialog(resources.getString("dm.info"), resources.getString("main.deleteRow"),
+                new Alert(Alert.AlertType.INFORMATION, "", YES, NO, CANCEL));
+        if (yes) {
+            passengerService.delete((Passenger) tablePassengers.getSelectionModel().getSelectedItem());
+            passengers.remove(tablePassengers.getSelectionModel().getSelectedIndex());
+        }
     }
 
     @FXML
@@ -233,13 +249,13 @@ public class PassengerController implements Initializable, MenuItemsEdit {
         String text = txtSearch.getText();
         List<Passenger> list = null;
         if (rbByFirstName.isSelected()) {
-            list = passengerDAO.searchByFirstName(text);
+            list = passengerService.searchByFirstName(text);
         }
         if (rbByLastName.isSelected()) {
-            list = passengerDAO.searchByLastName(text);
+            list = passengerService.searchByLastName(text);
         }
         if (rbByPassport.isSelected()) {
-            list = passengerDAO.searchByPassport(text);
+            list = passengerService.searchByPassport(text);
         }
         passengers.clear();
         passengers.addAll(list);

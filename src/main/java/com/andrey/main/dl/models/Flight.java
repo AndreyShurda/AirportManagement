@@ -2,10 +2,17 @@ package com.andrey.main.dl.models;
 
 import com.andrey.main.dl.data.FlightStatus;
 
+import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
-public class Flight {
-    private int id;
+@Entity
+public class Flight implements Serializable{
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
     private String number;
     //    private Airplane airplane;
     private LocalDateTime date;
@@ -15,6 +22,14 @@ public class Flight {
     private FlightStatus status;
     private String gate;
 //    private Ticket ticket;
+
+    @OneToMany(fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL, mappedBy = "flight")
+    private List<Ticket> ticketList = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL, mappedBy = "flight")
+    private List<Passenger> passengerList = new ArrayList<>();
 
 
     public Flight() {
@@ -29,17 +44,17 @@ public class Flight {
         this.gate = gate;
     }
 
-    public Flight(int id, String number, LocalDateTime date, String city, char terminal, FlightStatus status, String gate) {
+    public Flight(long id, String number, LocalDateTime date, String city, char terminal, FlightStatus status, String gate) {
         this(number, date, city, terminal, status, gate);
         this.id = id;
     }
 
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -91,18 +106,34 @@ public class Flight {
         this.gate = gate;
     }
 
+    public List<Ticket> getTicketList() {
+        return ticketList;
+    }
+
+    public void setTicketList(List<Ticket> ticketList) {
+        this.ticketList = ticketList;
+    }
+
+    public List<Passenger> getPassengerList() {
+        return passengerList;
+    }
+
+    public void setPassengerList(List<Passenger> passengerList) {
+        this.passengerList = passengerList;
+    }
 
     @Override
     public String toString() {
-        return "Flight{" +
-                "id=" + id +
-                ", number='" + number + '\'' +
-                ", date=" + date +
-                ", city='" + city + '\'' +
-                ", terminal=" + terminal +
-                ", status=" + status +
-                ", gate='" + gate + '\'' +
-                '}';
+//        return "Flight{" +
+//                "id=" + id +
+//                ", number='" + number + '\'' +
+//                ", date=" + date +
+//                ", city='" + city + '\'' +
+//                ", terminal=" + terminal +
+//                ", status=" + status +
+//                ", gate='" + gate + '\'' +
+//                '}';
+        return number;
     }
 
     @Override

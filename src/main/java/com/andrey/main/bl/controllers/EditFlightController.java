@@ -1,5 +1,6 @@
 package com.andrey.main.bl.controllers;
 
+import com.andrey.main.bl.Utils.DialogManager;
 import com.andrey.main.bl.Utils.FXUtil;
 import com.andrey.main.dl.data.FlightStatus;
 import com.andrey.main.dl.models.Flight;
@@ -8,12 +9,10 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 import jfxtras.scene.control.LocalDateTimeTextField;
 
 import java.net.URL;
@@ -44,7 +43,7 @@ public class EditFlightController implements Initializable {
 
 
     private Flight flight;
-    private ResourceBundle resourceBundle;
+    private ResourceBundle resources;
 //    private FlightController flightController = FlightController.getInstance();
 
 //    private List<Airport> airportList = ParserAirPort.convertFileToAirport("D:\\airport\\airports.csv");
@@ -56,11 +55,7 @@ public class EditFlightController implements Initializable {
 
     public void setFlight(Flight flight) {
         System.out.println("setFlight:" + flight);
-//        if (flight.getId() == 0) {
-//            System.out.println("setFlight null");
-//        }else {
-//            System.out.println("setFlight not null");
-//        }
+
         this.flight = flight;
         if (flight.getId() == 0) {
             txtNumFlight.clear();
@@ -89,7 +84,7 @@ public class EditFlightController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        this.resourceBundle = resources;
+        this.resources = resources;
         initTerminals();
 
         cbStatus.setItems(FXCollections.observableArrayList(FlightStatus.values()));
@@ -118,7 +113,7 @@ public class EditFlightController implements Initializable {
         cbTerminal.setItems(alphabet);
     }
 
-
+    @FXML
     public void saveFlight(ActionEvent actionEvent) {
         if (!isValidFlight()) {
             return;
@@ -131,42 +126,19 @@ public class EditFlightController implements Initializable {
         char terminal = (char) cbTerminal.getSelectionModel().getSelectedItem();
         FlightStatus status = FlightStatus.valueOf(String.valueOf(cbStatus.getSelectionModel().getSelectedItem()));
         String gate = txtGate.getText();
-//        System.out.println("1:"+cbTerminal.getSelectionModel().getSelectedItem());
-//        System.out.println(number);
-//        System.out.println(date);
-//        System.out.println(city);
-////        System.out.println(to);
-//        System.out.println(terminal);
-//        System.out.println(status);
-//        System.out.println(gate);
+
 
         Flight flightEdit;
         if (this.flight != null) {
-//        flight.setNumber(number);
-//        flight.setDate(date);
-//        flight.setCity(city);
-//        flight.setTerminal(terminal);
-//        flight.setStatus(status);
-//        flight.setGate(gate);
             flightEdit = new Flight(getFlight().getId(), number, date, city, terminal, status, gate);
-
-//            flightController.update(flightEdit);
         } else {
             System.out.println("is null in save");
             flightEdit = new Flight(number, date, city, terminal, status, gate);
-//            flightController.add(newFlight);
         }
-//        setFlight(flightEdit);
+
         this.flight = flightEdit;
         System.out.println("saveFlight" + getFlight());
-//        System.out.println(flightEdit);
-//
-//        if (flight == null || !this.flight.equals(flightEdit)) {
-//            setFlight(flightEdit);
-////            System.out.println("add " + this.flight.equals(flightEdit));
-//
-//            flightController.add(flight);
-//        }
+
         actionClose(actionEvent);
 
     }
@@ -178,13 +150,15 @@ public class EditFlightController implements Initializable {
                 cbStatus.getSelectionModel().getSelectedItem() == null ||
                 txtGate.getText().trim().length() == 0
                 ) {
+            DialogManager.showErrorDialog(resources.getString("dm.error"), resources.getString("main.validData"));
             System.out.println("not valid flight");
             return false;
         }
         return true;
     }
 
-    public void actionClose(ActionEvent actionEvent) {
+    @FXML
+    private void actionClose(ActionEvent actionEvent) {
         FXUtil.actionClose(actionEvent);
     }
 }

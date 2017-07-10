@@ -1,59 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Group?>
 <?import javafx.scene.control.CheckMenuItem?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.Group?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="400.0" minWidth="850.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.andrey.main.bl.controllers.MainController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="400.0" minWidth="850.0"
+      xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.andrey.main.bl.controllers.MainController">
     <children>
 
         <!--<fx:include fx:id="mainMenu" source="menu.fxml"/>-->
 
         <MenuBar fx:id="menuBar">
             <menus>
-                <Menu mnemonicParsing="false" text="File">
+                <Menu mnemonicParsing="false" text="%menu.file">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="Close" />
+                        <MenuItem mnemonicParsing="false" onAction="#closeApp" text="%menu.file.close"/>
+                        <MenuItem mnemonicParsing="false" onAction="#login" text="%menu.file.login"/>
                     </items>
                 </Menu>
-                <Menu fx:id="menuEdit" mnemonicParsing="false" text="Edit">
+                <Menu fx:id="menuEdit" mnemonicParsing="false" text="%menu.edit">
                     <items>
-                        <MenuItem mnemonicParsing="false" onAction="#add" text="New" />
-                        <MenuItem mnemonicParsing="false" onAction="#edit" text="Edit" />
-                        <MenuItem fx:id="menuEditDelete" mnemonicParsing="false" onAction="#delete" text="Delete" />
+                        <MenuItem mnemonicParsing="false" onAction="#add" text="%menu.edit.add"/>
+                        <MenuItem mnemonicParsing="false" onAction="#edit" text="%menu.edit.edit"/>
+                        <MenuItem fx:id="menuEditDelete" mnemonicParsing="false" onAction="#delete"
+                                  text="%menu.edit.delete"/>
                     </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="View">
+                <Menu mnemonicParsing="false" text="%menu.view">
                     <items>
-                        <CheckMenuItem fx:id="checkItemFlights" mnemonicParsing="false" onAction="#showFlights" text="Flights" />
-                        <CheckMenuItem fx:id="checkItemPassengers" mnemonicParsing="false" onAction="#showPassengers" text="Passengers" />
-                        <CheckMenuItem fx:id="checkItemTickets" mnemonicParsing="false" onAction="#showTickets" text="Tickets" />
+                        <CheckMenuItem fx:id="checkItemFlights" mnemonicParsing="false" onAction="#showFlights"
+                                       text="%flights"/>
+                        <CheckMenuItem fx:id="checkItemPassengers" mnemonicParsing="false" onAction="#showPassengers"
+                                       text="%passengers"/>
+                        <CheckMenuItem fx:id="checkItemTickets" mnemonicParsing="false" onAction="#showTickets"
+                                       text="%tickets"/>
                     </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="Help">
+                <Menu mnemonicParsing="false" text="%menu.help">
                     <items>
-                        <Menu mnemonicParsing="false" text="Language">
+                        <Menu mnemonicParsing="false" text="%menu.help.language">
                             <items>
-                                <MenuItem mnemonicParsing="false" onAction="#setEnglishLocale" text="English" />
-                                <MenuItem mnemonicParsing="false" onAction="#setRussianLocale" text="Руский" />
+                                <MenuItem mnemonicParsing="false" onAction="#setEnglishLocale" text="English"/>
+                                <MenuItem mnemonicParsing="false" onAction="#setRussianLocale" text="Руский"/>
                             </items>
                         </Menu>
-                        <MenuItem mnemonicParsing="false" text="About" />
+                        <MenuItem mnemonicParsing="false" text="%menu.help.about"/>
                     </items>
                 </Menu>
             </menus>
@@ -62,51 +63,65 @@
             <children>
                 <Group AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="5.0">
                     <children>
-                        <Label text="Current user name: ">
+                        <HBox>
                             <HBox.margin>
-                                <Insets left="10.0" top="5.0" />
+                                <Insets left="10.0" top="5.0"/>
                             </HBox.margin>
-                        </Label>
-                        <Label fx:id="lbUser" layoutX="110.0" text="user">
-                            <HBox.margin>
-                                <Insets top="5.0" />
-                            </HBox.margin>
-                            <font>
-                                <Font name="System Bold" size="12.0" />
-                            </font>
-                        </Label>
+                            <children>
+                                <Label text="%current_user_name">
+                                    <HBox.margin>
+                                        <Insets right="5.0"/>
+                                    </HBox.margin>
+                                </Label>
+                                <Label fx:id="lbUser" text="user">
+                                    <HBox.margin>
+                                        <Insets right="5.0"/>
+                                    </HBox.margin>
+                                    <font>
+                                        <Font name="System Bold" size="12.0"/>
+                                    </font>
+                                </Label>
+                            </children>
+                        </HBox>
                     </children>
                 </Group>
-                <Group AnchorPane.leftAnchor="200.0">
-                    <children>
-                        <Button onAction="#changeToAdmin" text="change to ADMIN" />
-                        <Button layoutX="125.0" onAction="#changeToStaff" text="change to STAFF" />
-                        <Button layoutX="240.0" onAction="#changeToGuest" text="change to GUEST" />
-                    </children>
-                </Group>
+                <!--<Group AnchorPane.leftAnchor="200.0">-->
+                <!--<children>-->
+                <!--<Button onAction="#changeToAdmin" text="change to ADMIN" />-->
+                <!--<Button layoutX="125.0" onAction="#changeToStaff" text="change to STAFF" />-->
+                <!--<Button layoutX="240.0" onAction="#changeToGuest" text="change to GUEST" />-->
+                <!--</children>-->
+                <!--</Group>-->
                 <Group AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="5.0">
                     <children>
-                        <Label layoutX="20.0" layoutY="15.0" text="Current user role: ">
+                        <HBox layoutX="20.0" layoutY="15.0">
                             <HBox.margin>
-                                <Insets left="40.0" top="5.0" />
+                                <Insets left="40.0" top="5.0"/>
                             </HBox.margin>
-                        </Label>
-                        <Label fx:id="lbRole" layoutX="124.0" layoutY="15.0" text="role">
-                            <font>
-                                <Font name="System Bold" size="12.0" />
-                            </font>
-                            <HBox.margin>
-                                <Insets top="5.0" />
-                            </HBox.margin>
-                        </Label>
+                            <children>
+                                <Label text="%сurrent_user_role">
+                                    <HBox.margin>
+                                        <Insets left="5.0"/>
+                                    </HBox.margin>
+                                </Label>
+                                <Label fx:id="lbRole" text="role">
+                                    <font>
+                                        <Font name="System Bold" size="12.0"/>
+                                    </font>
+                                    <HBox.margin>
+                                        <Insets left="5.0"/>
+                                    </HBox.margin>
+                                </Label>
+                            </children>
+                        </HBox>
                     </children>
                 </Group>
             </children>
         </AnchorPane>
 
-        <TabPane fx:id="tabPane" VBox.vgrow="ALWAYS">
+        <TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
             <VBox.margin>
-                <Insets left="10.0" right="10.0" top="10.0" />
+                <Insets left="10.0" right="10.0" top="10.0"/>
             </VBox.margin>
             <tabs>
                 <!--<Tab fx:id="tabFlights" onCloseRequest="#tabCloseFlights" text="%flights">-->

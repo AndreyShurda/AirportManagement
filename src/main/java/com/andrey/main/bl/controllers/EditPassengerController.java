@@ -1,9 +1,11 @@
 package com.andrey.main.bl.controllers;
 
+import com.andrey.main.bl.Utils.DialogManager;
 import com.andrey.main.bl.Utils.FXUtil;
-import com.andrey.main.dl.dao.FlightDAO;
+import com.andrey.main.bl.services.FlightService;
 import com.andrey.main.dl.data.ClassType;
 import com.andrey.main.dl.data.Gender;
+import com.andrey.main.dl.models.Flight;
 import com.andrey.main.dl.models.Passenger;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -24,7 +26,7 @@ import java.util.stream.Collectors;
 
 public class EditPassengerController implements Initializable {
     @FXML
-    private TextField txtIdFlight;
+    private ComboBox<Flight> txtIdFlight;
     @FXML
     private TextField txtFirstName;
     @FXML
@@ -45,14 +47,14 @@ public class EditPassengerController implements Initializable {
 
     private URL location;
     private ResourceBundle resources;
-    private FlightDAO flightDAO = FlightDAO.getInstance();
+    private FlightService flightService = new FlightService();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.location = location;
         this.resources = resources;
 
-        initIdFlightNumber();
+        initFlightNumber();
         TextFields.bindAutoCompletion(txtNationality, getListOfCountries());
         cbGender.setItems(FXCollections.observableArrayList(Gender.values()));
         cbClassType.setItems(FXCollections.observableArrayList(ClassType.values()));
@@ -67,17 +69,13 @@ public class EditPassengerController implements Initializable {
                 .map(c -> c.getDisplayCountry(Locale.ENGLISH))
                 .collect(Collectors.toList());
         return countries;
-
     }
 
-    private List<String> initFlightNumber() {
-        return flightDAO.getAll().stream()
-                .map(c -> c.getNumber())
-                .collect(Collectors.toList());
-    }
+    private void initFlightNumber() {
+//        TextFields.bindAutoCompletion(txtIdFlight, initFlightNumber());
+//        FlightService flightService = new FlightService();
+        txtIdFlight.setItems(FXCollections.observableArrayList(flightService.getAll()));
 
-    private void initIdFlightNumber() {
-        TextFields.bindAutoCompletion(txtIdFlight, initFlightNumber());
     }
 
     public Passenger getPassenger() {
@@ -85,11 +83,13 @@ public class EditPassengerController implements Initializable {
     }
 
     public void setPassenger(Passenger passenger) {
-        initIdFlightNumber();
+        initFlightNumber();
+//        List<Flight> all = flightService.getAll();
+//        txtIdFlight.setItems(FXCollections.observableArrayList(all));
         this.passenger = passenger;
 
         if (passenger.getId() == 0) {
-            txtIdFlight.clear();
+            txtIdFlight.getSelectionModel().select(null);
             txtFirstName.clear();
             txtLastName.clear();
             txtNationality.clear();
@@ -98,7 +98,7 @@ public class EditPassengerController implements Initializable {
             cbGender.getSelectionModel().select(null);
             cbClassType.getSelectionModel().select(null);
         } else {
-            txtIdFlight.setText(passenger.getFlightNumber());
+            txtIdFlight.setValue(passenger.getFlight());
             txtFirstName.setText(passenger.getFirstName());
             txtLastName.setText(passenger.getLastName());
             txtNationality.setText(passenger.getNationality());
@@ -109,12 +109,13 @@ public class EditPassengerController implements Initializable {
         }
     }
 
+    @FXML
     public void saveFlight(ActionEvent actionEvent) {
         if (!isValidPassenger()) {
             return;
         }
 
-        String idFlight = txtIdFlight.getText();
+        Flight flight = txtIdFlight.getItems().get(txtIdFlight.getSelectionModel().getSelectedIndex());
         String firstName = txtFirstName.getText();
         String lastName = txtLastName.getText();
         String nationality = txtNationality.getText();
@@ -123,32 +124,39 @@ public class EditPassengerController implements Initializable {
         Gender gender = Gender.valueOf(String.valueOf(cbGender.getSelectionModel().getSelectedItem()));
         ClassType classType = ClassType.valueOf(String.valueOf(cbClassType.getSelectionModel().getSelectedItem()));
 
-        Passenger editPassenger;
+//        Passenger newPassenger = new Passenger();
         if (getPassenger() != null) {
-            editPassenger = new Passenger(getPassenger().getId(), idFlight, firstName, lastName, nationality, passport, birthday, gender, classType);
-        } else {
-            editPassenger = new Passenger(idFlight, firstName, lastName, nationality, passport, birthday, gender, classType);
+            passenger.setId(getPassenger().getId());
         }
-        setPassenger(editPassenger);
+        passenger.setFirstName(firstName);
+        passenger.setLastName(lastName);
+        passenger.setNationality(nationality);
+        passenger.setPassport(passport);
+        passenger.setBirthday(birthday);
+        passenger.setGender(gender);
+        passenger.setClassType(classType);
+        passenger.setFlight(flight);
 
+//        setPassenger(passenger);
         actionClose(actionEvent);
     }
 
     private boolean isValidPassenger() {
-        if (txtIdFlight.getText().trim().length() == 0 || txtFirstName.getText().trim().length() == 0 ||
+        if (txtIdFlight.getSelectionModel().getSelectedItem() == null || txtFirstName.getText().trim().length() == 0 ||
                 txtLastName.getText().trim().length() == 0 || txtNationality.getText().trim().length() == 0 ||
                 txtPassport.getText().trim().length() == 0 || txtBirthday.getValue() == null ||
                 cbGender.getSelectionModel().getSelectedItem() == null ||
                 cbClassType.getSelectionModel().getSelectedItem() == null
                 ) {
+            DialogManager.showErrorDialog(resources.getString("dm.error"), resources.getString("main.validData"));
             System.out.println("not valid passenger");
             return false;
         }
         return true;
     }
 
-
-    public void actionClose(ActionEvent actionEvent) {
+    @FXML
+    private void actionClose(ActionEvent actionEvent) {
         FXUtil.actionClose(actionEvent);
     }
 }

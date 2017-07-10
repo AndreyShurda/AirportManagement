@@ -3,11 +3,16 @@ package com.andrey.main.dl.models;
 import com.andrey.main.dl.data.Gender;
 import com.andrey.main.dl.data.ClassType;
 
+import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class Passenger {
+@Entity
+public class Passenger implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String flightNumber;
+//    private String flightNumber;
     private String firstName;
     private String lastName;
     private String nationality;
@@ -16,25 +21,28 @@ public class Passenger {
     private Gender gender;
     private ClassType classType;
 
+    @ManyToOne
+    private Flight flight;
+
     public Passenger() {
     }
 
-    public Passenger(String flightNumber, String firstName, String lastName, String nationality, String passport, LocalDate birthday, Gender gender, ClassType classType) {
-        this.flightNumber = flightNumber;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.nationality = nationality;
-        this.passport = passport;
-        this.birthday = birthday;
-        this.gender = gender;
-        this.classType = classType;
-    }
-
-    public Passenger(long id, String flightNumber, String firstName, String lastName, String nationality, String passport, LocalDate birthday, Gender gender, ClassType classType) {
-        this(flightNumber, firstName, lastName, nationality, passport, birthday, gender, classType);
-        this.id = id;
-
-    }
+//    public Passenger(String flightNumber, String firstName, String lastName, String nationality, String passport, LocalDate birthday, Gender gender, ClassType classType) {
+//        this.flightNumber = flightNumber;
+//        this.firstName = firstName;
+//        this.lastName = lastName;
+//        this.nationality = nationality;
+//        this.passport = passport;
+//        this.birthday = birthday;
+//        this.gender = gender;
+//        this.classType = classType;
+//    }
+//
+//    public Passenger(long id, String flightNumber, String firstName, String lastName, String nationality, String passport, LocalDate birthday, Gender gender, ClassType classType) {
+//        this(flightNumber, firstName, lastName, nationality, passport, birthday, gender, classType);
+//        this.id = id;
+//
+//    }
 
     public long getId() {
         return id;
@@ -44,13 +52,6 @@ public class Passenger {
         this.id = id;
     }
 
-    public String getFlightNumber() {
-        return flightNumber;
-    }
-
-    public void setFlightNumber(String flightNumber) {
-        this.flightNumber = flightNumber;
-    }
 
     public String getFirstName() {
         return firstName;
@@ -108,19 +109,12 @@ public class Passenger {
         this.classType = classType;
     }
 
-    @Override
-    public String toString() {
-        return "Passenger{" +
-                "id=" + id +
-                ", flightNumber=" + flightNumber +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", nationality='" + nationality + '\'' +
-                ", passport='" + passport + '\'' +
-                ", birthday=" + birthday +
-                ", gender=" + gender +
-                ", ticketType=" + classType +
-                '}';
+    public Flight getFlight() {
+        return flight;
+    }
+
+    public void setFlight(Flight flight) {
+        this.flight = flight;
     }
 
     @Override
@@ -130,8 +124,7 @@ public class Passenger {
 
         Passenger passenger = (Passenger) o;
 
-        if (flightNumber != null ? !flightNumber.equals(passenger.flightNumber) : passenger.flightNumber != null)
-            return false;
+        if (id != passenger.id) return false;
         if (firstName != null ? !firstName.equals(passenger.firstName) : passenger.firstName != null) return false;
         if (lastName != null ? !lastName.equals(passenger.lastName) : passenger.lastName != null) return false;
         if (nationality != null ? !nationality.equals(passenger.nationality) : passenger.nationality != null)
@@ -145,7 +138,7 @@ public class Passenger {
 
     @Override
     public int hashCode() {
-        int result = flightNumber != null ? flightNumber.hashCode() : 0;
+        int result = (int) (id ^ (id >>> 32));
         result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
         result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
         result = 31 * result + (nationality != null ? nationality.hashCode() : 0);
@@ -154,5 +147,20 @@ public class Passenger {
         result = 31 * result + (gender != null ? gender.hashCode() : 0);
         result = 31 * result + (classType != null ? classType.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Passenger{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", nationality='" + nationality + '\'' +
+                ", passport='" + passport + '\'' +
+                ", birthday=" + birthday +
+                ", gender=" + gender +
+                ", classType=" + classType +
+                ", flight=" + flight +
+                '}';
     }
 }

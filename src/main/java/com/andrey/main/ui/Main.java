@@ -16,11 +16,11 @@ import static java.time.DayOfWeek.*;
 public class Main {
     public static void main(String[] args) {
         List<Passenger> passengersList = new ArrayList<>();
-        passengersList.add(new Passenger("01", "Andrey", "Shurda", "ua", "SM1233AM", LocalDate.of(1989, 8, 22), MAN, ECONOM));
-        passengersList.add(new Passenger("02", "Andrey", "Shurda", "ua", "SM1233AM", LocalDate.of(1989, 8, 22), MAN, ECONOM));
-        passengersList.add(new Passenger("03", "Andrey", "Shurda", "ua", "SM1233AM", LocalDate.of(1989, 8, 22), MAN, ECONOM));
-        passengersList.add(new Passenger("03", "Ivan", "Ivanov", "ru", "SM123478", LocalDate.of(1988, 6, 12), MAN, BUSINESS));
-        passengersList.add(new Passenger("03", "Rita", "Ivanova", "ru", "SM123445", LocalDate.of(2000, 4, 11), WOMAN, BUSINESS));
+//        passengersList.add(new Passenger("01", "Andrey", "Shurda", "ua", "SM1233AM", LocalDate.of(1989, 8, 22), MAN, ECONOM));
+//        passengersList.add(new Passenger("02", "Andrey", "Shurda", "ua", "SM1233AM", LocalDate.of(1989, 8, 22), MAN, ECONOM));
+//        passengersList.add(new Passenger("03", "Andrey", "Shurda", "ua", "SM1233AM", LocalDate.of(1989, 8, 22), MAN, ECONOM));
+//        passengersList.add(new Passenger("03", "Ivan", "Ivanov", "ru", "SM123478", LocalDate.of(1988, 6, 12), MAN, BUSINESS));
+//        passengersList.add(new Passenger("03", "Rita", "Ivanova", "ru", "SM123445", LocalDate.of(2000, 4, 11), WOMAN, BUSINESS));
 
         printList(passengersList);
 

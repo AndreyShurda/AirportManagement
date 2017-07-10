@@ -1,12 +1,12 @@
 package com.andrey.main.bl.controllers;
 
+import com.andrey.main.bl.Utils.DialogManager;
 import com.andrey.main.bl.Utils.FXUtil;
 import com.andrey.main.bl.access.AccessHandler;
 import com.andrey.main.bl.access.MyPermission;
 import com.andrey.main.bl.access.PermissionAction;
-import com.andrey.main.bl.operations.MenuItemsEdit;
-import com.andrey.main.dl.dao.FlightDAO;
-import com.andrey.main.dl.dao.TicketDAO;
+import com.andrey.main.bl.operations.ProxyOperations;
+import com.andrey.main.bl.services.TicketService;
 import com.andrey.main.dl.data.ClassType;
 import com.andrey.main.dl.models.Flight;
 import com.andrey.main.dl.models.Ticket;
@@ -30,9 +30,12 @@ import java.util.ResourceBundle;
 
 import static com.andrey.main.dl.dao.InitialData.LOCALE_VALUE;
 import static com.andrey.main.dl.dao.InitialData.PATH_BUNDLES_LOCALE;
+import static javafx.scene.control.ButtonType.CANCEL;
+import static javafx.scene.control.ButtonType.NO;
+import static javafx.scene.control.ButtonType.YES;
 
 
-public class TicketController implements Initializable, MenuItemsEdit {
+public class TicketController implements Initializable, ProxyOperations {
     @FXML
     private Label labelCount;
     @FXML
@@ -43,7 +46,7 @@ public class TicketController implements Initializable, MenuItemsEdit {
     //    @FXML
     public TableView tableTickets;
     @FXML
-    private TableColumn<Ticket, String> columnFlightNumber;
+    private TableColumn<Flight, String> columnFlightNumber;
     @FXML
     private TableColumn<Ticket, Double> columnPrice;
     @FXML
@@ -53,14 +56,13 @@ public class TicketController implements Initializable, MenuItemsEdit {
     private URL location;
     private ResourceBundle resources;
     private ObservableList<Ticket> tickets = FXCollections.observableArrayList();
-    private TicketDAO ticketDAO = TicketDAO.getInstance();
+    private TicketService ticketService = new TicketService();
 
     private final String editTicketFile = "/fxml/editTicket.fxml";
     private Parent fxmlEdit;
     private EditTicketController editTicketController;
     private Stage editDialogStage;
-    private MenuItemsEdit proxyController;
-
+    private ProxyOperations proxyController;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -72,15 +74,15 @@ public class TicketController implements Initializable, MenuItemsEdit {
         initListner();
         updateCountLable();
 
-        proxyController = (MenuItemsEdit) AccessHandler.newInstance(this);
+        proxyController = (ProxyOperations) AccessHandler.newInstance(this);
     }
 
     private void initTable() {
-        columnFlightNumber.setCellValueFactory(new PropertyValueFactory<Ticket, String>("IdFlight"));
+        columnFlightNumber.setCellValueFactory(new PropertyValueFactory<Flight, String>("flight"));
         columnPrice.setCellValueFactory(new PropertyValueFactory<Ticket, Double>("price"));
         columnClassType.setCellValueFactory(new PropertyValueFactory<Ticket, ClassType>("classType"));
 
-        tickets.addAll(ticketDAO.getAll());
+        tickets.addAll(ticketService.getAll());
 
         tableTickets.setItems(tickets);
     }
@@ -107,7 +109,7 @@ public class TicketController implements Initializable, MenuItemsEdit {
         tableTickets.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) {
                 editRow();
-//                System.out.println("cliked 2");
+                System.out.println("cliked 2");
             }
         });
 
@@ -115,19 +117,27 @@ public class TicketController implements Initializable, MenuItemsEdit {
             if (event.getCode().equals(KeyCode.ENTER)) {
                 editRow();
             }
-            if (event.getCode().equals(KeyCode.DELETE)) {
-                deleteRow();
-            }
+//            if (event.getCode().equals(KeyCode.DELETE)) {
+//                deleteRow();
+//            }
         });
 
         txtFrom.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if (!newValue.matches("\\d*")) {
-                    txtFrom.setText(newValue.replaceAll("[^\\d]", ""));
+//                if (!newValue.matches("[0-9]*\\\\.?[0-9]+")) {
+                if (!newValue.matches("\\d+\\.\\d+")) {
+//                    txtFrom.setText(newValue.replaceAll("[^\\d]", ""));
+                    int length = newValue.length();
+//                    if (length > 0) {
+//                        txtFrom.setText(newValue.substring(0, length - 1));
+//                    }
+                    System.out.println(newValue.substring(0, length - 1));
                 }
             }
+
         });
+
 
     }
 
@@ -141,9 +151,9 @@ public class TicketController implements Initializable, MenuItemsEdit {
     }
 
 
-    private void updateTable() {
+    public void updateTable() {
         tickets.clear();
-        tickets.addAll(ticketDAO.getAll());
+        tickets.addAll(ticketService.getAll());
     }
 
     private void createRow() {
@@ -151,14 +161,7 @@ public class TicketController implements Initializable, MenuItemsEdit {
         showDialog();
         Ticket newTicket = editTicketController.getTicket();
         if (newTicket.hashCode() != 0) {
-//        System.out.println("newFlight = " + newFlight);
-            for (Flight flight : FlightDAO.getInstance().getAll()) {
-                if (flight.getNumber().equals(newTicket.getIdFlight())) {
-                    newTicket.setIdFlight(String.valueOf(flight.getId()));
-                    break;
-                }
-            }
-            ticketDAO.add(newTicket);
+            ticketService.add(newTicket);
             updateTable();
         }
     }
@@ -175,18 +178,8 @@ public class TicketController implements Initializable, MenuItemsEdit {
         showDialog();
         Ticket ticketEdit = editTicketController.getTicket();
 //        System.out.println("editRow" + ticketEdit);
-        if (!selectedTicked.equals(ticketEdit)) {
-            tickets.set(selectedIndex, ticketEdit);
-            for (Flight flight : FlightDAO.getInstance().getAll()) {
-                if (flight.getNumber().equals(ticketEdit.getIdFlight())) {
-
-                    Ticket ticketUpdate = new Ticket(ticketEdit.getIdTicket(), String.valueOf(flight.getId()), ticketEdit.getPrice(), ticketEdit.getClassType());
-//                    ticketUpdate.setIdFlight(String.valueOf(flight.getId()));
-//                    System.out.println("123:ww " + ticketUpdate);
-                    ticketDAO.update(ticketUpdate);
-                }
-            }
-        }
+        ticketService.update(ticketEdit);
+        tickets.set(selectedIndex, ticketEdit);
     }
 
     private void deleteRow() {
@@ -209,8 +202,12 @@ public class TicketController implements Initializable, MenuItemsEdit {
     @Override
     @MyPermission(value = {PermissionAction.ADMIN})
     public void delete() {
-        ticketDAO.delete((Ticket) tableTickets.getSelectionModel().getSelectedItem());
-        tickets.remove(tableTickets.getSelectionModel().getSelectedIndex());
+        boolean yes = DialogManager.showInfoDialog(resources.getString("dm.info"), resources.getString("main.deleteRow"),
+                new Alert(Alert.AlertType.INFORMATION, "", YES, NO, CANCEL));
+        if (yes) {
+            ticketService.delete((Ticket) tableTickets.getSelectionModel().getSelectedItem());
+            tickets.remove(tableTickets.getSelectionModel().getSelectedIndex());
+        }
     }
 
     @FXML
@@ -218,8 +215,11 @@ public class TicketController implements Initializable, MenuItemsEdit {
         double from = getNumberFromField(txtFrom);
         double to = getNumberFromField(txtTo);
         tickets.clear();
+        if (from == 0 && to == 0) {
+            tickets.addAll(ticketService.getAll());
+        }
 //        tickets.addAll(searchService.searchByPrice(c -> (c.getPrice() >= from && c.getPrice() <= to)));
-        tickets.addAll(ticketDAO.searchByPrice(from, to));
+        tickets.addAll(ticketService.searchByPrice(from, to));
     }
 
     private double getNumberFromField(TextField textField) {

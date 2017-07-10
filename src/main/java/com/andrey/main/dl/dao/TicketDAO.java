@@ -1,21 +1,16 @@
 package com.andrey.main.dl.dao;
 
-import com.andrey.main.dl.data.ClassType;
 import com.andrey.main.dl.models.Ticket;
+import org.apache.log4j.Logger;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
-import static com.andrey.main.dl.dao.DBUtil.*;
-import static com.andrey.main.dl.dao.InitialData.*;
+import static com.andrey.main.dl.dao.HibernateDBUtil.operationCRUD;
 
 
 public class TicketDAO implements OperationDAO<Ticket> {
     private static TicketDAO instance = new TicketDAO();
-    //    private static final String TABLE_TICKETS = "tickets";
-//    private static final String TABLE_TICKETS = TABLE_TICKETS;
+    private static final Logger log = Logger.getLogger(TicketDAO.class);
 
     private TicketDAO() {
     }
@@ -24,96 +19,53 @@ public class TicketDAO implements OperationDAO<Ticket> {
         return instance;
     }
 
-
     @Override
     public void add(Ticket record) {
-        String query = "insert into " + TABLE_TICKETS + " (idFlight, price, classType)" +
-                " values(?,?,?)";
-        doQuery(record, query);
+        log.info("add record: " + record);
+        operationCRUD(session -> session.save(record));
     }
 
     @Override
-    public void delete(Ticket record) {
-        createConnection();
-        String query = "delete from " + TABLE_TICKETS + " WHERE idTicket =?";
-        try {
-            executeQuery(query, String.valueOf(record.getIdTicket()));
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            closeConnection();
-        }
+    public void delete(long id) {
+        Ticket ticket = getById(id);
+        log.info("delete record: " + ticket);
+        operationCRUD(session -> {
+            session.delete(ticket);
+        });
     }
 
     @Override
     public void update(Ticket record) {
-        String query = "UPDATE " + TABLE_TICKETS + " SET idFlight=?, price=?, classType=? WHERE  idTicket =" + record.getIdTicket();
-        doQuery(record, query);
+        log.info("update record: " + record);
+        operationCRUD(session -> session.update(record));
+    }
+
+
+    @Override
+    public Ticket getById(long id) {
+        final Ticket[] ticket = new Ticket[1];
+        operationCRUD(session -> {
+            ticket[0] = session.get(Ticket.class, id);
+        });
+        return ticket[0];
     }
 
     @Override
     public List<Ticket> getAll() {
-        String query = "SELECT t.idTicket, f.number, t.price, t.classType " +
-                "FROM " + DATABASE + "." + TABLE_ARRIVALS + " f " +
-                "inner join " + DATABASE + "." + TABLE_TICKETS + " t on f.idFlight = t.idFlight";
-        return getAll(query);
+        final List[] list = new List[1];
+        operationCRUD(session -> {
+            list[0] = session.createQuery("FROM Ticket ").list();
+        });
+        log.info("getAll records: " + list[0]);
+        return list[0];
     }
 
     public List<Ticket> searchByPrice(double from, double to) {
-        TicketDAO ticketDAO = TicketDAO.getInstance();
-        String query = "SELECT t.idTicket, f.number, t.price, t.classType " +
-                "FROM " + DATABASE + "." + TABLE_ARRIVALS + " f " +
-                "inner join " + DATABASE + "." + TABLE_TICKETS + " t on f.idFlight = t.idFlight " +
-                "where t.price > " + from + " and t.price < " + to;
-        return ticketDAO.getAll(query);
+        final List[] list = new List[1];
+        operationCRUD(session -> {
+            list[0] = session.createQuery("FROM Ticket where price>=" + from + " and price<=" + to).list();
+        });
+        log.info("searchByPrice: " + list[0]);
+        return list[0];
     }
-
-    public List<Ticket> getAll(String query) {
-        createConnection();
-        List<Ticket> tickets = new ArrayList<>();
-//        String query = "select idTicket, idFlight, price, classType " +
-//                "from " + TABLE_TICKETS;
-
-
-//        String query = "SELECT t.idTicket, f.number, t.price, t.classType " +
-//                "FROM airport.flight f " +
-//                "inner join airport.tickets t on f.idFlight = t.idFlight";
-        try {
-            ResultSet resultSet = executeQuery(query);
-
-            while (resultSet.next()) {
-                Integer idTicket = Integer.valueOf(resultSet.getString("idTicket"));
-                String numberFlight = resultSet.getString("number");
-                float price = resultSet.getFloat("price");
-                ClassType classType = ClassType.values()[resultSet.getInt("classType")];
-
-                tickets.add(new Ticket(idTicket,
-                        numberFlight,
-                        price,
-                        classType)
-                );
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            closeConnection();
-        }
-        return tickets;
-    }
-
-    private void doQuery(Ticket record, String query) {
-        createConnection();
-        try {
-            executeQuery(query,
-                    record.getIdFlight(),
-                    String.valueOf(record.getPrice()),
-                    String.valueOf(record.getClassType().ordinal())
-            );
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        closeConnection();
-    }
-
-
 }

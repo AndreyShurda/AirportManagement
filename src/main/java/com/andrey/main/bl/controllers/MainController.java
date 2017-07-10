@@ -3,7 +3,10 @@ package com.andrey.main.bl.controllers;
 import com.andrey.main.bl.Utils.DialogManager;
 import com.andrey.main.bl.access.AccessHandler;
 import com.andrey.main.bl.access.MyPermission;
-import com.andrey.main.bl.operations.MenuItemsEdit;
+import com.andrey.main.bl.access.PermissionUtils;
+import com.andrey.main.bl.operations.ProxyOperations;
+import com.andrey.main.ui.FXMain;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -18,6 +21,9 @@ import java.util.ResourceBundle;
 import static com.andrey.main.bl.access.PermissionAction.*;
 import static com.andrey.main.dl.dao.ApplicationProperties.*;
 import static com.andrey.main.dl.dao.InitialData.*;
+import static javafx.scene.control.ButtonType.CANCEL;
+import static javafx.scene.control.ButtonType.NO;
+import static javafx.scene.control.ButtonType.YES;
 
 
 public class MainController implements Initializable {
@@ -62,9 +68,9 @@ public class MainController implements Initializable {
     private TicketController ticketController;
 
 
-    private MenuItemsEdit proxyFlightController;
-    private MenuItemsEdit proxyPassengerController;
-    private MenuItemsEdit proxyTicketController;
+    private ProxyOperations proxyFlightController;
+    private ProxyOperations proxyPassengerController;
+    private ProxyOperations proxyTicketController;
 
 
     public void setFlightController(FlightController flightController) {
@@ -89,14 +95,13 @@ public class MainController implements Initializable {
         this.resourceBundle = resources;
         this.location = location;
 
-
         initListner();
         initControllers();
 //        changeUser();
 
-        proxyFlightController = (MenuItemsEdit) AccessHandler.newInstance(flightController);
-        proxyPassengerController = (MenuItemsEdit) AccessHandler.newInstance(passengerController);
-        proxyTicketController = (MenuItemsEdit) AccessHandler.newInstance(ticketController);
+        proxyFlightController = (ProxyOperations) AccessHandler.newInstance(flightController);
+        proxyPassengerController = (ProxyOperations) AccessHandler.newInstance(passengerController);
+        proxyTicketController = (ProxyOperations) AccessHandler.newInstance(ticketController);
 //        proxyTicketController = (MenuItemsEdit) Proxy.newProxyInstance(
 //                ClassLoader.getSystemClassLoader(),
 //                new Class[]{MenuItemsEdit.class},
@@ -116,15 +121,15 @@ public class MainController implements Initializable {
 
     @MyPermission(value = {STAFF, ADMIN})
     public void accessToMenu() {
-//        if (!PermissionUtils.processPermission(this.getClass(), "accessToMenu")) {
-//            checkItemFlights.setDisable(true);
-//            checkItemPassengers.setDisable(true);
-//            menuEdit.setDisable(true);
-//        }else {
-//            checkItemFlights.setDisable(false);
-//            checkItemPassengers.setDisable(false);
-//            menuEdit.setDisable(false);
-//        }
+        if (!PermissionUtils.processPermission(this.getClass(), "accessToMenu")) {
+            checkItemFlights.setDisable(true);
+            checkItemPassengers.setDisable(true);
+            menuEdit.setDisable(true);
+        } else {
+            checkItemFlights.setDisable(false);
+            checkItemPassengers.setDisable(false);
+            menuEdit.setDisable(false);
+        }
     }
 
     private void initControllers() {
@@ -201,7 +206,9 @@ public class MainController implements Initializable {
     public void delete() {
         doOperation(tabFlights, flightController.tableFlight, (s) -> s.delete(), proxyFlightController);
         doOperation(tabPassengers, passengerController.tablePassengers, (s) -> s.delete(), proxyPassengerController);
+        passengerController.updateTable();
         doOperation(tabTickets, ticketController.tableTickets, (s) -> s.delete(), proxyTicketController);
+        ticketController.updateTable();
     }
 
     @FXML
@@ -219,42 +226,53 @@ public class MainController implements Initializable {
         savePropertiesToFile();
     }
 
+//    @FXML
+//    public void changeToAdmin() {
+//        CURRENT_USER = USER_ADMIN;
+//        changeUser();
+//    }
+//
+//    @FXML
+//    public void changeToStaff() {
+//        CURRENT_USER = USER_STAFF;
+//        changeUser();
+//    }
+//
+//    @FXML
+//    public void changeToGuest() {
+//        CURRENT_USER = USER_GUEST;
+//        changeUser();
+//    }
+
     @FXML
-    public void changeToAdmin() {
-        CURRENT_USER = USER_ADMIN;
-        changeUser();
+    public void closeApp() {
+        System.exit(0);
     }
 
     @FXML
-    public void changeToStaff() {
-        CURRENT_USER = USER_STAFF;
-        changeUser();
-    }
-
-    @FXML
-    public void changeToGuest() {
-        CURRENT_USER = USER_GUEST;
-        changeUser();
+    private void login() {
+        mainStage.close();
+        FXMain.primaryStage.show();
     }
 
     @FunctionalInterface
     public interface Command {
-        void execute(MenuItemsEdit menuItemsEdit);
+        void execute(ProxyOperations ProxyOperations);
     }
 
-    private void doOperation(Tab tab, Command command, MenuItemsEdit menuItemsEdit) {
+    private void doOperation(Tab tab, Command command, ProxyOperations ProxyOperations) {
         if (tab.isSelected()) {
-            command.execute(menuItemsEdit);
+            command.execute(ProxyOperations);
         }
     }
 
-    private void doOperation(Tab tab, TableView tableView, Command command, MenuItemsEdit menuItemsEdit) {
+    private void doOperation(Tab tab, TableView tableView, Command command, ProxyOperations ProxyOperations) {
         if (tableView.getSelectionModel().getSelectedIndex() != -1) {
-            doOperation(tab, command, menuItemsEdit);
+            doOperation(tab, command, ProxyOperations);
         } else if (tab.isSelected()) {
-//            DialogManager.showInfoDialog(resourceBundle.getString("error"), resourceBundle.getString("not select"));
-            DialogManager.showInfoDialog("error", "not select row in table");
-//            System.out.println("not select");
+            DialogManager.showInfoDialog(resourceBundle.getString("dm.info"), resourceBundle.getString("main.not_select_row"));
+//            boolean yes = DialogManager.showInfoDialog(resourceBundle.getString("dm.info"), resourceBundle.getString("main.not_select_row"),
+//                    new Alert(Alert.AlertType.INFORMATION, "", YES, NO, CANCEL));
         }
     }
 

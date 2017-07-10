@@ -17,7 +17,7 @@
             <children>
                 <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="35.0" prefWidth="467.0" VBox.vgrow="ALWAYS" xmlns="http://javafx.com/javafx/8.0.76-ea">
                     <children>
-                        <Label layoutX="95.0" layoutY="20.0" text="by Price">
+                        <Label layoutX="95.0" layoutY="20.0" text="%tickets.ByPrice">
                             <font>
                                 <Font size="14.0" />
                             </font>
@@ -25,7 +25,7 @@
                                 <Insets left="10.0" right="5.0" top="10.0" />
                             </HBox.margin>
                         </Label>
-                        <TextField fx:id="txtFrom" layoutX="10.0" layoutY="20.0" prefWidth="80.0" promptText="from">
+                        <TextField fx:id="txtFrom" layoutX="10.0" layoutY="20.0" prefWidth="80.0" promptText="%tickets.from">
                             <HBox.margin>
                                 <Insets right="5.0" top="10.0" />
                             </HBox.margin>
@@ -38,7 +38,7 @@
                                 <Font size="18.0" />
                             </font>
                         </Label>
-                        <TextField fx:id="txtTo" layoutX="112.0" layoutY="13.0" onAction="#search" prefWidth="80.0" promptText="to" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="100.0">
+                        <TextField fx:id="txtTo" layoutX="112.0" layoutY="13.0" onAction="#search" prefWidth="80.0" promptText="%tickets.to" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="100.0">
                             <HBox.margin>
                                 <Insets left="5.0" right="15.0" top="10.0" />
                             </HBox.margin>
@@ -59,9 +59,9 @@
                             <!--xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1"-->
                             <!--fx:controller="com.andrey.main.bl.controllers.TicketController">-->
                             <columns>
-                                <TableColumn fx:id="columnFlightNumber" prefWidth="75.0" text="FlightNumber" />
-                                <TableColumn fx:id="columnPrice" prefWidth="75.0" text="Price" />
-                                <TableColumn fx:id="columnClassType" prefWidth="25.0" text="ClassType" />
+                                <TableColumn fx:id="columnFlightNumber" prefWidth="75.0" text="%flights.number" />
+                                <TableColumn fx:id="columnPrice" prefWidth="75.0" text="%tickets.price" />
+                                <TableColumn fx:id="columnClassType" prefWidth="25.0" text="%passengers.classType" />
                             </columns>
                             <columnResizePolicy>
                                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -71,7 +71,7 @@
                 </AnchorPane>
                 <AnchorPane prefHeight="30.0">
                     <children>
-                        <Label fx:id="labelCount" text="Count of rows:" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
+                        <Label fx:id="labelCount" text="%count_of_rows" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
                             <padding>
                                 <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
                             </padding>

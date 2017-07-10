@@ -1,6 +1,6 @@
 package com.andrey.main.bl.operations;
 
-public interface MenuItemsEdit {
+public interface ProxyOperations {
     void add();
 
     void edit();

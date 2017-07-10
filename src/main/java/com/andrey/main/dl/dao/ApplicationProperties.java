@@ -5,27 +5,13 @@ import java.io.*;
 import java.util.Properties;
 
 public class ApplicationProperties {
-    public static Properties properties = readProperties(getAbsolutePathToFile());
-    private static final String PATH_TO_FILE = "/conf/db.properties";
-//    public static String absolutePathToFile = new Configurations().getAbsolutePathToFile(PATH_TO_FILE);;
-//    public static Properties properties = readProperties(getAbsolutePathToFile());
-//    private String pathToFile = getClass().getClassLoader().getResource("configuration/db.properties").getFile();
+    //    private static final String PATH_TO_FILE = "/conf/db.properties";
+    private static final String PATH_TO_FILE = new GetPath().getAbsolutePathFile("/configuration/db.properties");
+    public static Properties properties = readProperties(PATH_TO_FILE);
 
-
-    private static String getAbsolutePathToFile() {
-        File currentDirectory = new File(new File("").getAbsolutePath());
-        String absolutePath = currentDirectory.getAbsolutePath();
-        System.out.println(absolutePath);
-        return absolutePath + PATH_TO_FILE;
-//        return new Configurations().getAbsolutePathToFile(PATH_TO_FILE);
-    }
-
-//    private String getAbsolutePathToFile(String filePath){
-//        return getClass().getClassLoader().getResource(filePath).getFile();
-//    }
 
     public static void savePropertiesToFile() {
-        savePropertiesToFile(getAbsolutePathToFile());
+        savePropertiesToFile(PATH_TO_FILE);
     }
 
     public static void savePropertiesToFile(String fileName) {
@@ -77,5 +63,11 @@ public class ApplicationProperties {
             }
         }
         return properties;
+    }
+
+    public static class GetPath {
+        public String getAbsolutePathFile(String pathInProject){
+            return getClass().getResource(pathInProject).getPath();
+        }
     }
 }

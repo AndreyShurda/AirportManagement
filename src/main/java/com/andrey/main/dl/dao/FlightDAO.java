@@ -1,17 +1,9 @@
 package com.andrey.main.dl.dao;
 
-import com.andrey.main.dl.data.FlightStatus;
 import com.andrey.main.dl.models.Flight;
 import org.apache.log4j.Logger;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
-
-import static com.andrey.main.dl.dao.DBUtil.*;
-//import static com.andrey.main.dl.dao.InitialData.TABLE;
+import static com.andrey.main.dl.dao.HibernateDBUtil.operationCRUD;
 
 public class FlightDAO implements OperationDAO<Flight> {
     private static FlightDAO instance = new FlightDAO();
@@ -31,104 +23,57 @@ public class FlightDAO implements OperationDAO<Flight> {
 
     @Override
     public void add(Flight record) {
-        String query = "insert into " + TABLE + " (number, date, city," +
-                " terminal, flightStatus, gate) values(?,?,?,?,?,?)";
-        doQuery(record, query);
-        log.info("Add record: " + record);
+        log.info("add record: " + record);
+        operationCRUD(session -> session.save(record));
     }
 
     @Override
-    public void delete(Flight record) {
-        createConnection();
-        String query = "delete from " + TABLE + " WHERE idFlight =?";
-        try {
-            executeQuery(query, String.valueOf(record.getId()));
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            closeConnection();
-        }
-        log.info("Delete record: " + record);
+    public void delete(long id) {
+        Flight flight = getById(id);
+        log.info("delete record: " + flight);
+        operationCRUD(session -> session.delete(flight));
     }
 
     @Override
     public void update(Flight record) {
-        String query = "UPDATE " + TABLE + " SET number=?, date=?, city=?," +
-                "terminal=?, flightStatus=?, gate=? WHERE  idFlight =" + record.getId();
-        doQuery(record, query);
-        log.info("Update record: " + record);
+        log.info("update record: " + record);
+        operationCRUD(session -> session.update(record));
     }
 
 
-    private void doQuery(Flight record, String query) {
-        createConnection();
-        try {
-            executeQuery(query,
-                    record.getNumber(),
-                    record.getDate().toString(),
-                    record.getCity(),
-                    String.valueOf(record.getTerminal()),
-                    String.valueOf(record.getStatus().ordinal()),
-                    record.getGate().toString());
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        closeConnection();
+    @Override
+    public Flight getById(long id) {
+        final Flight[] flight = new Flight[1];
+        operationCRUD(session -> {
+            flight[0] = session.get(Flight.class, id);
+        });
+        return flight[0];
     }
 
     @Override
     public List<Flight> getAll() {
-        String query = "select idFlight, number, date, city, terminal, flightStatus, gate " +
-                "from " + TABLE;
-
-        log.info("Get all record from table: " + TABLE);
-        return getFlights(query);
+        final List[] list = new List[1];
+        operationCRUD(session -> {
+            list[0] = session.createQuery("FROM Flight ").list();
+        });
+        log.info("getAll records: " + list[0]);
+        return list[0];
     }
 
-    public List<Flight> searchByNumber(String value) {
-        return searchByColumn("number", value);
+    public List<Flight> searchByNumber(String text) {
+        return searchByColumn("number", text);
     }
 
     public List<Flight> searchByCity(String text) {
         return searchByColumn("city", text);
     }
 
-    private List<Flight> searchByColumn(String columnName, String text) {
-        String query = "select idFlight, number, date, city, terminal, flightStatus, gate " +
-                "from " + TABLE +
-                " where " + columnName + " like '" + text + "%'";
-        return getFlights(query);
-    }
-
-    private List<Flight> getFlights(String query) {
-        createConnection();
-        List<Flight> flights = new ArrayList<>();
-        try {
-            ResultSet resultSet = executeQuery(query);
-
-
-            while (resultSet.next()) {
-                int idFlight = Integer.valueOf(resultSet.getString("idFlight"));
-                String number = resultSet.getString("number");
-                Timestamp date = resultSet.getTimestamp("date");
-                String city = resultSet.getString("city");
-                char terminal = resultSet.getString("terminal").charAt(0);
-                FlightStatus flightStatus = FlightStatus.values()[resultSet.getInt("flightStatus")];
-                String gate = resultSet.getString("gate");
-                flights.add(new Flight(idFlight,
-                        number,
-                        date.toLocalDateTime(),
-                        city,
-                        terminal,
-                        flightStatus,
-                        gate)
-                );
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            closeConnection();
-        }
-        return flights;
+    private List<Flight> searchByColumn(String columnName, String value) {
+        final List[] list = new List[1];
+        operationCRUD(session -> {
+            list[0] = session.createQuery("FROM Flight where " + columnName + " like '" + value + "%'").list();
+        });
+        log.info("searchBy" + columnName + ": " + list[0]);
+        return list[0];
     }
 }

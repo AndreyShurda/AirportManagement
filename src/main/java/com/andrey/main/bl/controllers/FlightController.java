@@ -1,10 +1,12 @@
 package com.andrey.main.bl.controllers;
 
+import com.andrey.main.bl.Utils.DialogManager;
 import com.andrey.main.bl.Utils.FXUtil;
 import com.andrey.main.bl.access.AccessHandler;
 import com.andrey.main.bl.access.MyPermission;
 import com.andrey.main.bl.access.PermissionAction;
-import com.andrey.main.bl.operations.MenuItemsEdit;
+import com.andrey.main.bl.operations.ProxyOperations;
+import com.andrey.main.bl.services.FlightService;
 import com.andrey.main.dl.dao.FlightDAO;
 import com.andrey.main.dl.dao.InitialData;
 import com.andrey.main.dl.data.FlightStatus;
@@ -12,6 +14,7 @@ import com.andrey.main.dl.models.Flight;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -29,8 +32,9 @@ import java.util.ResourceBundle;
 
 import static com.andrey.main.dl.dao.InitialData.LOCALE_VALUE;
 import static com.andrey.main.dl.dao.InitialData.PATH_BUNDLES_LOCALE;
+import static javafx.scene.control.ButtonType.*;
 
-public class FlightController implements Initializable, MenuItemsEdit {
+public class FlightController implements Initializable, ProxyOperations {
 
     @FXML
     private TextField txtSearch;
@@ -64,20 +68,21 @@ public class FlightController implements Initializable, MenuItemsEdit {
     private Label labelCount;
 
     private ObservableList<Flight> flights = FXCollections.observableArrayList();
-    private FlightDAO flightDAO = FlightDAO.getInstance();
-    private ResourceBundle resourceBundle;
+    //    private FlightDAO flightDAO = FlightDAO.getInstance();
+    private FlightService flightService
+            = new FlightService();
+    private ResourceBundle resources;
     private URL location;
 
     private Parent fxmlEdit;
     private FXMLLoader fxmlLoader = new FXMLLoader();
     private EditFlightController editFlightController;
     private Stage editDialogStage;
-    private MenuItemsEdit proxyController;
-
+    private ProxyOperations proxyController;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        this.resourceBundle = resources;
+        this.resources = resources;
         this.location = location;
 //        System.out.println("url: " + location);
         rbByNumber.setToggleGroup(groupRB);
@@ -90,7 +95,7 @@ public class FlightController implements Initializable, MenuItemsEdit {
 //        updateCountLable();
         initListner();
 
-        proxyController = (MenuItemsEdit) AccessHandler.newInstance(this);
+        proxyController = (ProxyOperations) AccessHandler.newInstance(this);
 
     }
 
@@ -99,7 +104,7 @@ public class FlightController implements Initializable, MenuItemsEdit {
 //        System.out.println("FlightControllerFX initEditDialog()");
         try {
             URL resource = getClass().getResource("/fxml/editFlying.fxml");
-//        System.out.println("resource: " + resource);
+//        System.out.println("resources: " + resources);
             fxmlLoader.setLocation(resource);
             fxmlLoader.setResources(ResourceBundle.getBundle(PATH_BUNDLES_LOCALE, LOCALE_VALUE));
 //            fxmlLoader.setResources(ResourceBundle.getBundle("test.bundles.Locale", new Locale("ru")));
@@ -121,7 +126,7 @@ public class FlightController implements Initializable, MenuItemsEdit {
         columnStatus.setCellValueFactory(new PropertyValueFactory<Flight, FlightStatus>("status"));
         columnGate.setCellValueFactory(new PropertyValueFactory<Flight, String>("gate"));
 
-        flights.addAll(flightDAO.getAll());
+        flights.addAll(flightService.getAll());
 
         tableFlight.setItems(flights);
         updateCountLable();
@@ -169,7 +174,7 @@ public class FlightController implements Initializable, MenuItemsEdit {
         Flight flightEdit = editFlightController.getFlight();
         System.out.println("editRow" + flightEdit);
         if (!selectedFlight.equals(flightEdit)) {
-            flightDAO.update(flightEdit);
+            flightService.update(flightEdit);
             flights.set(tableFlight.getSelectionModel().getSelectedIndex(), flightEdit);
         }
     }
@@ -185,14 +190,14 @@ public class FlightController implements Initializable, MenuItemsEdit {
         Flight newFlight = editFlightController.getFlight();
         if (newFlight.hashCode() != 0) {
 //        System.out.println("newFlight = " + newFlight);
-            flightDAO.add(newFlight);
+            flightService.add(newFlight);
             updateTable();
         }
     }
 
     private void updateTable() {
         flights.clear();
-        flights.addAll(flightDAO.getAll());
+        flights.addAll(flightService.getAll());
     }
 
     private void updateCountLable() {
@@ -203,6 +208,7 @@ public class FlightController implements Initializable, MenuItemsEdit {
     private void showDialog() {
         fxmlLoader.setResources(ResourceBundle.getBundle(PATH_BUNDLES_LOCALE, LOCALE_VALUE));
         editDialogStage = FXUtil.showDialog(fxmlEdit, editDialogStage);
+//        editDialogStage = FXUtil.showDialog(new ActionEvent(), fxmlEdit, editDialogStage);
     }
 
     @Override
@@ -220,8 +226,13 @@ public class FlightController implements Initializable, MenuItemsEdit {
     @Override
     @MyPermission(PermissionAction.ADMIN)
     public void delete() {
-        flightDAO.delete((Flight) tableFlight.getSelectionModel().getSelectedItem());
-        flights.remove(tableFlight.getSelectionModel().getSelectedIndex());
+//        DialogManager.showInfoDialog(resources.getString("dm.info"), resources.getString("main.not_select_row"));
+        boolean yes = DialogManager.showInfoDialog(resources.getString("dm.info"), resources.getString("main.deleteRow"),
+                new Alert(Alert.AlertType.INFORMATION, "", YES, NO, CANCEL));
+        if (yes) {
+            flightService.delete((Flight) tableFlight.getSelectionModel().getSelectedItem());
+            flights.remove(tableFlight.getSelectionModel().getSelectedIndex());
+        }
     }
 
     @FXML
@@ -229,10 +240,10 @@ public class FlightController implements Initializable, MenuItemsEdit {
         String text = txtSearch.getText();
         List<Flight> list = null;
         if (rbByNumber.isSelected()) {
-            list = flightDAO.searchByNumber(text);
+            list = flightService.searchByNumber(text);
         }
         if (rbByCity.isSelected()) {
-            list = flightDAO.searchByCity(text);
+            list = flightService.searchByCity(text);
         }
         flights.clear();
         flights.addAll(list);

@@ -6,11 +6,11 @@ public interface OperationDAO<T> {
 
     void add(T record);
 
-    void delete(T record);
+    void delete(long id);
 
     void update(T record);
 
-//    T getById(int id);
+    T getById(long id);
 
     List<T> getAll();
 }

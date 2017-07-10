@@ -17,17 +17,17 @@
             <children>
                 <HBox>
                     <children>
-                        <RadioButton fx:id="rbByFirstName" mnemonicParsing="false" text="%passenger.rb.byFirstName">
+                        <RadioButton fx:id="rbByFirstName" mnemonicParsing="false" text="%passengers.rb.byFirstName">
                             <HBox.margin>
                                 <Insets left="10.0" right="10.0" top="10.0" />
                             </HBox.margin>
                         </RadioButton>
-                        <RadioButton fx:id="rbByLastName" mnemonicParsing="false" text="%passenger.rb.byLastName">
+                        <RadioButton fx:id="rbByLastName" mnemonicParsing="false" text="%passengers.rb.byLastName">
                             <HBox.margin>
                                 <Insets left="10.0" right="10.0" top="10.0" />
                             </HBox.margin>
                         </RadioButton>
-                        <RadioButton fx:id="rbByPassport" mnemonicParsing="false" text="%passenger.rb.byPassport">
+                        <RadioButton fx:id="rbByPassport" mnemonicParsing="false" text="%passengers.rb.byPassport">
                             <HBox.margin>
                                 <Insets left="10.0" right="10.0" top="10.0" />
                             </HBox.margin>
@@ -36,7 +36,7 @@
                 </HBox>
                 <AnchorPane>
                     <children>
-                        <TextField fx:id="txtSearch" layoutX="112.0" layoutY="13.0" onAction="#search" promptText="search" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="100.0" />
+                        <TextField fx:id="txtSearch" layoutX="112.0" layoutY="13.0" onAction="#search" promptText="%find" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="100.0" />
                         <Button layoutX="405.0" layoutY="13.0" mnemonicParsing="false" onAction="#search" prefHeight="25.0" prefWidth="94.0" text="%find" AnchorPane.rightAnchor="0.0" />
                     </children>
                     <VBox.margin>
@@ -49,14 +49,14 @@
                             <!--xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1"-->
                             <!--fx:controller="com.andrey.main.bl.controllers.PassengerController">-->
                             <columns>
-                                <TableColumn fx:id="columnFlightNumber" prefWidth="75.0" text="%flight_number" />
-                                <TableColumn fx:id="columnFirstName" prefWidth="75.0" text="%firstName" />
-                                <TableColumn fx:id="columnLastName" prefWidth="150.0" text="%lastName" />
-                                <TableColumn fx:id="columnNationality" prefWidth="75.0" text="%nationality" />
-                                <TableColumn fx:id="columnPassport" prefWidth="15.0" text="%passport" />
-                                <TableColumn fx:id="columnBirthday" prefWidth="15.0" text="%birthday" />
-                                <TableColumn fx:id="columnGender" prefWidth="25.0" text="%sex" />
-                                <TableColumn fx:id="columnClassType" prefWidth="25.0" text="%classType" />
+                                <TableColumn fx:id="columnFlightNumber" prefWidth="75.0" text="%flights.number" />
+                                <TableColumn fx:id="columnFirstName" prefWidth="75.0" text="%passengers.firstName" />
+                                <TableColumn fx:id="columnLastName" prefWidth="150.0" text="%passengers.lastName" />
+                                <TableColumn fx:id="columnNationality" prefWidth="75.0" text="%passengers.nationality" />
+                                <TableColumn fx:id="columnPassport" prefWidth="15.0" text="%passengers.passport" />
+                                <TableColumn fx:id="columnBirthday" prefWidth="15.0" text="%passengers.birthday" />
+                                <TableColumn fx:id="columnGender" prefWidth="25.0" text="%passengers.gender" />
+                                <TableColumn fx:id="columnClassType" prefWidth="25.0" text="%passengers.classType" />
                             </columns>
                             <columnResizePolicy>
                                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -66,7 +66,7 @@
                 </AnchorPane>
                 <AnchorPane prefHeight="30.0">
                     <children>
-                        <Label fx:id="labelCount" text="Count of rows:" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
+                        <Label fx:id="labelCount" text="%count_of_rows" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
                             <padding>
                                 <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
                             </padding>

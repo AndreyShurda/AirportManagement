@@ -2,9 +2,11 @@ package com.andrey.main.bl.controllers;
 
 
 import com.andrey.main.bl.Utils.AutoCompleteComboBoxListener;
+import com.andrey.main.bl.Utils.DialogManager;
 import com.andrey.main.bl.Utils.FXUtil;
-import com.andrey.main.dl.dao.FlightDAO;
+import com.andrey.main.bl.services.FlightService;
 import com.andrey.main.dl.data.ClassType;
+import com.andrey.main.dl.models.Flight;
 import com.andrey.main.dl.models.Ticket;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -14,13 +16,11 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
 public class EditTicketController implements Initializable {
     @FXML
-    private ComboBox txtIdFlight;
+    private ComboBox<Flight> txtIdFlight;
     @FXML
     private TextField txtPrice;
     @FXML
@@ -30,7 +30,7 @@ public class EditTicketController implements Initializable {
     private URL location;
     private ResourceBundle resources;
 
-    private FlightDAO instanceFlight = FlightDAO.getInstance();
+    private FlightService flightService = new FlightService();
 
     public Ticket getTicket() {
         return ticket;
@@ -38,6 +38,7 @@ public class EditTicketController implements Initializable {
 
     public void setTicket(Ticket ticket) {
         System.out.println(ticket);
+        initFlightNumber();
         this.ticket = ticket;
 
         if (ticket.getIdTicket() == 0) {
@@ -45,7 +46,7 @@ public class EditTicketController implements Initializable {
             txtPrice.clear();
             cbClassType.getSelectionModel().select(null);
         } else {
-            txtIdFlight.setValue(ticket.getIdFlight());
+            txtIdFlight.setValue(ticket.getFlight());
             txtPrice.setText(String.valueOf(ticket.getPrice()));
             cbClassType.getSelectionModel().select(ticket.getClassType().ordinal());
         }
@@ -57,34 +58,47 @@ public class EditTicketController implements Initializable {
         this.resources = resources;
 
 //        TextFields.bindAutoCompletion(txtIdFlight, initFlightNumber());
-        txtIdFlight.setItems(FXCollections.observableArrayList(initFlightNumber()));
+//        txtIdFlight.setItems(FXCollections.observableArrayList(initFlightNumber()));
+        initFlightNumber();
         new AutoCompleteComboBoxListener(txtIdFlight);
         cbClassType.setItems(FXCollections.observableArrayList(ClassType.values()));
+
+//        txtPrice.textProperty().addListener(new ChangeListener<String>() {
+//            @Override
+//            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+////                if (!newValue.matches("\\d*")) {
+////                    txtPrice.setText(newValue.replaceAll("[^\\d]", ""));
+////                }
+//                if (!newValue.matches("[0-9]*\\\\.?[0-9]+")) {
+////                    System.out.println("asd");
+////                    txtPrice.setText(newValue.replaceAll("[^\\d]", ""));
+//                    txtPrice.setText(newValue.substring(0, newValue.length() - 1));
+//                }
+//            }
+//        });
     }
 
-    private List<String> initFlightNumber() {
-
-        return instanceFlight.getAll().stream()
-                .map(c -> c.getNumber())
-                .collect(Collectors.toList());
+    private void initFlightNumber() {
+        txtIdFlight.setItems(FXCollections.observableArrayList(flightService.getAll()));
     }
 
+    @FXML
     public void save(ActionEvent actionEvent) {
         if (!isValidTicket()) {
             return;
         }
-
-        String idFlight = (String) txtIdFlight.getSelectionModel().getSelectedItem();
+        Flight flight = txtIdFlight.getItems().get(txtIdFlight.getSelectionModel().getSelectedIndex());
         Double price = Double.valueOf(txtPrice.getText());
         ClassType classType = ClassType.valueOf(String.valueOf(cbClassType.getSelectionModel().getSelectedItem()));
 
-        Ticket editTicket;
         if (getTicket() != null) {
-            editTicket = new Ticket(getTicket().getIdTicket(), idFlight, price, classType);
-        } else {
-            editTicket = new Ticket(idFlight, price, classType);
+            ticket.setIdTicket(getTicket().getIdTicket());
         }
-        setTicket(editTicket);
+
+        ticket.setPrice(price);
+        ticket.setClassType(classType);
+
+        ticket.setFlight(flight);
 
         actionClose(actionEvent);
     }
@@ -93,13 +107,15 @@ public class EditTicketController implements Initializable {
         if (txtIdFlight.getSelectionModel().getSelectedItem() == null || txtPrice.getText().trim().length() == 0 ||
                 cbClassType.getSelectionModel().getSelectedItem() == null
                 ) {
+            DialogManager.showErrorDialog(resources.getString("dm.error"), resources.getString("main.validData"));
             System.out.println("not valid ticket");
             return false;
         }
         return true;
     }
 
-    public void actionClose(ActionEvent actionEvent) {
+    @FXML
+    private void actionClose(ActionEvent actionEvent) {
         FXUtil.actionClose(actionEvent);
     }
 }
