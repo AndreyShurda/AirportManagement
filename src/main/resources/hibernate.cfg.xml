@@ -25,13 +25,9 @@
         <mapping class="com.andrey.main.dl.models.Flight"/>
         <mapping class="com.andrey.main.dl.models.Passenger"/>
         <mapping class="com.andrey.main.dl.models.Ticket"/>
-        <mapping class="com.andrey.main.dl.models.UserEntity"/>
+        <mapping class="com.andrey.main.dl.models.User"/>
         <mapping class="com.andrey.main.dl.models.Arrivals"/>
         <mapping class="com.andrey.main.dl.models.Departures"/>
-        <mapping class="hibernametest.dao.Tickets"/>
-        <mapping class="hibernametest.model.Flights"/>
-        <!--<mapping class="hibernametest.model.FlightArivalls"/>-->
-        <!--<mapping class="hibernametest.model.FlightDepartures"/>-->
 
     </session-factory>
 </hibernate-configuration>

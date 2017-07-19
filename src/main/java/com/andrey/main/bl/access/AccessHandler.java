@@ -1,7 +1,7 @@
 package com.andrey.main.bl.access;
 
 import com.andrey.main.bl.Utils.DialogManager;
-import com.andrey.main.dl.dao.InitialData;
+import com.andrey.main.dl.dao.utils.InitialData;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -9,8 +9,8 @@ import java.lang.reflect.Proxy;
 import java.util.ResourceBundle;
 
 import static com.andrey.main.bl.access.PermissionUtils.processPermission;
-import static com.andrey.main.dl.dao.InitialData.LOCALE_VALUE;
-import static com.andrey.main.dl.dao.InitialData.PATH_BUNDLES_LOCALE;
+import static com.andrey.main.dl.dao.utils.InitialData.LOCALE_VALUE;
+import static com.andrey.main.dl.dao.utils.InitialData.PATH_BUNDLES_LOCALE;
 
 
 public class AccessHandler implements InvocationHandler {

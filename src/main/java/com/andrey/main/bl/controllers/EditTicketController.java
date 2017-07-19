@@ -4,7 +4,6 @@ package com.andrey.main.bl.controllers;
 import com.andrey.main.bl.Utils.AutoCompleteComboBoxListener;
 import com.andrey.main.bl.Utils.DialogManager;
 import com.andrey.main.bl.Utils.FXUtil;
-import com.andrey.main.bl.services.DestinationService;
 import com.andrey.main.bl.services.FlightService;
 import com.andrey.main.dl.data.ClassType;
 import com.andrey.main.dl.models.Flight;
@@ -58,8 +57,6 @@ public class EditTicketController implements Initializable {
         this.location = location;
         this.resources = resources;
 
-//        TextFields.bindAutoCompletion(txtIdFlight, initFlightNumber());
-//        txtIdFlight.setItems(FXCollections.observableArrayList(initFlightNumber()));
         initFlightNumber();
         new AutoCompleteComboBoxListener(txtIdFlight);
         cbClassType.setItems(FXCollections.observableArrayList(ClassType.values()));
@@ -109,7 +106,6 @@ public class EditTicketController implements Initializable {
                 cbClassType.getSelectionModel().getSelectedItem() == null
                 ) {
             DialogManager.showErrorDialog(resources.getString("dm.error"), resources.getString("main.validData"));
-            System.out.println("not valid ticket");
             return false;
         }
         return true;

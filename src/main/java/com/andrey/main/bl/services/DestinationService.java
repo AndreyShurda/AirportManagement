@@ -1,9 +1,8 @@
 package com.andrey.main.bl.services;
 
 
+import com.andrey.main.bl.operations.ServiceOperation;
 import com.andrey.main.dl.dao.DestinationDAO;
-import com.andrey.main.dl.models.Arrivals;
-import com.andrey.main.dl.models.Departures;
 import com.andrey.main.dl.models.Destination;
 
 import java.util.List;

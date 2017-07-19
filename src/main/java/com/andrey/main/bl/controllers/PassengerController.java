@@ -30,8 +30,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import static com.andrey.main.dl.dao.InitialData.LOCALE_VALUE;
-import static com.andrey.main.dl.dao.InitialData.PATH_BUNDLES_LOCALE;
+import static com.andrey.main.dl.dao.utils.InitialData.LOCALE_VALUE;
+import static com.andrey.main.dl.dao.utils.InitialData.PATH_BUNDLES_LOCALE;
 import static javafx.scene.control.ButtonType.CANCEL;
 import static javafx.scene.control.ButtonType.NO;
 import static javafx.scene.control.ButtonType.YES;
@@ -48,7 +48,7 @@ public class PassengerController implements Initializable, ProxyOperations {
 
     @FXML
     private TextField txtSearch;
-    //    @FXML
+    @FXML
     public TableView tablePassengers;
     @FXML
     private Label labelCount;

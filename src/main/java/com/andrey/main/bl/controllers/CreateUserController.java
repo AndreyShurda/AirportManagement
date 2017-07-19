@@ -4,8 +4,8 @@ package com.andrey.main.bl.controllers;
 import com.andrey.main.bl.Utils.DialogManager;
 import com.andrey.main.bl.Utils.CryptoUtils;
 import com.andrey.main.bl.access.PermissionAction;
-import com.andrey.main.bl.services.UserEntityService;
-import com.andrey.main.dl.models.UserEntity;
+import com.andrey.main.bl.services.UserService;
+import com.andrey.main.dl.models.User;
 import com.andrey.main.ui.FXMain;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -29,7 +29,7 @@ public class CreateUserController implements Initializable {
     private ResourceBundle resources;
     private Stage mainStage;
 
-    private UserEntityService userEntityService = new UserEntityService();
+    private UserService userService = new UserService();
 
     public void setMainStage(Stage mainStage) {
         this.mainStage = mainStage;
@@ -59,17 +59,13 @@ public class CreateUserController implements Initializable {
         String userName = txtUser.getText();
         String password = txtPassword.getText();
         PermissionAction role = cbRole.getSelectionModel().getSelectedItem();
-        UserEntity user = new UserEntity();
+        User user = new User();
         user.setName(userName);
         user.setPassword(CryptoUtils.encode(password));
         user.setPermissionAction(role);
-        System.out.println(user);
-        if (!userEntityService.getAll().contains(user)) {
-            System.out.println("new user");
-            userEntityService.add(user);
+        if (!userService.getAll().contains(user)) {
+            userService.add(user);
             actionClose();
-        } else {
-            System.out.println("This user already exists");
         }
     }
 

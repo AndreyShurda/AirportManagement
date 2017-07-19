@@ -2,11 +2,9 @@ package com.andrey.main.bl.controllers;
 
 
 import com.andrey.main.bl.Utils.CryptoUtils;
-import com.andrey.main.bl.Utils.DialogManager;
-import com.andrey.main.bl.services.UserEntityService;
-import com.andrey.main.dl.dao.InitialData;
+import com.andrey.main.bl.services.UserService;
+import com.andrey.main.dl.dao.utils.InitialData;
 import com.andrey.main.dl.models.User;
-import com.andrey.main.dl.models.UserEntity;
 import com.andrey.main.ui.FXMain;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -25,8 +23,8 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import static com.andrey.main.dl.dao.InitialData.LOCALE_VALUE;
-import static com.andrey.main.dl.dao.InitialData.PATH_BUNDLES_LOCALE;
+import static com.andrey.main.dl.dao.utils.InitialData.LOCALE_VALUE;
+import static com.andrey.main.dl.dao.utils.InitialData.PATH_BUNDLES_LOCALE;
 
 public class AuthorizationController implements Initializable {
     @FXML
@@ -38,10 +36,9 @@ public class AuthorizationController implements Initializable {
     private URL location;
     private ResourceBundle resources;
 
-    private UserEntityService userEntityService = new UserEntityService();
+    private UserService userService = new UserService();
 
     private Stage mainStage;
-    //    private List<UserEntity> users;
     private Stage primaryStage;
 
     public void setMainStage(Stage mainStage) {
@@ -52,8 +49,6 @@ public class AuthorizationController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         this.location = location;
         this.resources = resources;
-
-//        users = userEntityService.getAll();
     }
 
     @FXML
@@ -67,7 +62,6 @@ public class AuthorizationController implements Initializable {
         if (isValidUser(userName, password)) {
 
             try {
-//                initRootLayout(mainStage);
                 actionClose();
                 primaryStage = initRootLayout();
                 txtUser.clear();
@@ -81,21 +75,20 @@ public class AuthorizationController implements Initializable {
     }
 
     private boolean isValidUser(String userName, String password) {
-        List<UserEntity> users = userEntityService.getAll();
-        for (UserEntity userEntity : users) {
-            if (userEntity.getName().equals(userName) && CryptoUtils.decode(userEntity.getPassword()).equals(password)) {
-                System.out.println("This user is register");
-//                System.out.println(userEntity);
-                User currentUser = new User();
-                currentUser.setName(userName);
-                currentUser.addPermission(userEntity.getPermissionAction());
-                InitialData.CURRENT_USER = currentUser;
-                System.out.println(InitialData.CURRENT_USER);
-                return true;
-            }else {
-//                DialogManager.showInfoDialog(resources.getString("dm.info"), resources.getString("authorization.wrongUser"));
-                lbInfo.setText(resources.getString("authorization.wrongUser"));
-                lbInfo.setVisible(true);
+        List<User> users = userService.getAll();
+        if (users.size() == 0){
+            lbInfo.setText(resources.getString("authorization.wrongUser"));
+            lbInfo.setVisible(true);
+        }else {
+            for (User user : users) {
+                if (user.getName().equals(userName) && CryptoUtils.decode(user.getPassword()).equals(password)) {
+                    System.out.println(user);
+                    InitialData.CURRENT_USER = user;
+                    return true;
+                } else {
+                    lbInfo.setText(resources.getString("authorization.wrongUser"));
+                    lbInfo.setVisible(true);
+                }
             }
         }
         return false;
@@ -132,7 +125,6 @@ public class AuthorizationController implements Initializable {
         });
     }
 
-    //    private void initRootLayout(Stage primaryStage) throws IOException {
     private Stage initRootLayout() throws IOException {
         Stage primaryStage = new Stage();
         FXMLLoader fxmlLoader = new FXMLLoader();

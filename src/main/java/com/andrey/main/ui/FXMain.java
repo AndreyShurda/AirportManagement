@@ -1,24 +1,20 @@
 package com.andrey.main.ui;
 
 import com.andrey.main.bl.controllers.AuthorizationController;
-import com.andrey.main.bl.controllers.MainController;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Locale;
 import java.util.ResourceBundle;
 
-import static com.andrey.main.dl.dao.InitialData.LOCALE_VALUE;
-import static com.andrey.main.dl.dao.InitialData.PATH_BUNDLES_LOCALE;
+import static com.andrey.main.dl.dao.utils.InitialData.LOCALE_VALUE;
+import static com.andrey.main.dl.dao.utils.InitialData.PATH_BUNDLES_LOCALE;
 
 public class FXMain extends Application {
     public static Stage primaryStage;
@@ -32,10 +28,8 @@ public class FXMain extends Application {
         this.primaryStage = primaryStage;
 
         loadLogin();
-//        initRootLayout(primaryStage);
     }
 
-//    private void loadLogin(Stage primaryStage) throws IOException {
     private void loadLogin() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader();
         URL resource = getClass().getResource("/fxml/authorization.fxml");
@@ -51,7 +45,6 @@ public class FXMain extends Application {
 
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
-//        primaryStage.initStyle(StageStyle.UNDECORATED);
         primaryStage.setAlwaysOnTop(true);
         primaryStage.show();
 

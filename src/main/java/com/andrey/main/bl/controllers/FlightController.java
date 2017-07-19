@@ -8,7 +8,7 @@ import com.andrey.main.bl.access.PermissionAction;
 import com.andrey.main.bl.operations.ProxyOperations;
 import com.andrey.main.bl.services.DestinationService;
 import com.andrey.main.dl.dao.DestinationDAO;
-import com.andrey.main.dl.dao.InitialData;
+import com.andrey.main.dl.dao.utils.InitialData;
 import com.andrey.main.dl.data.FlightStatus;
 import com.andrey.main.dl.models.Arrivals;
 import com.andrey.main.dl.models.Departures;
@@ -32,8 +32,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import static com.andrey.main.dl.dao.InitialData.LOCALE_VALUE;
-import static com.andrey.main.dl.dao.InitialData.PATH_BUNDLES_LOCALE;
+import static com.andrey.main.dl.dao.utils.InitialData.LOCALE_VALUE;
+import static com.andrey.main.dl.dao.utils.InitialData.PATH_BUNDLES_LOCALE;
 import static javafx.scene.control.ButtonType.*;
 
 public class FlightController implements Initializable, ProxyOperations {
@@ -48,14 +48,10 @@ public class FlightController implements Initializable, ProxyOperations {
     @FXML
     private RadioButton rbByCity;
     private ToggleGroup groupRB = new ToggleGroup();
-    //    @FXML
-//    private ToggleGroup groupButton = new ToggleGroup();
-    //    @FXML
-    public TableView<Destination> tableFlight;
+
     @FXML
-    private MenuItem conMenuNew;
-    //    @FXML
-//    private TableColumn<Destination, Integer> columnId;
+    public TableView<Destination> tableFlight;
+
     @FXML
     private TableColumn<Flight, String> columnNumber;
     @FXML
@@ -73,7 +69,6 @@ public class FlightController implements Initializable, ProxyOperations {
     private Label labelCount;
 
     private ObservableList<Destination> flights = FXCollections.observableArrayList();
-    //    private FlightDAO flightDAO = FlightDAO.getInstance();
     private DestinationService destinationService = new DestinationService();
     private ResourceBundle resources;
     private URL location;
@@ -88,7 +83,7 @@ public class FlightController implements Initializable, ProxyOperations {
     public void initialize(URL location, ResourceBundle resources) {
         this.resources = resources;
         this.location = location;
-//        System.out.println("url: " + location);
+
         rbByNumber.setToggleGroup(groupRB);
         rbByNumber.setSelected(true);
         rbByCity.setToggleGroup(groupRB);
@@ -96,7 +91,6 @@ public class FlightController implements Initializable, ProxyOperations {
 
         initTable();
         initEditDialog();
-//        updateCountLable();
         initListner();
 
         proxyController = (ProxyOperations) AccessHandler.newInstance(this);
@@ -229,7 +223,6 @@ public class FlightController implements Initializable, ProxyOperations {
     @Override
     @MyPermission(PermissionAction.ADMIN)
     public void delete() {
-//        DialogManager.showInfoDialog(resources.getString("dm.info"), resources.getString("main.not_select_row"));
         boolean yes = DialogManager.showInfoDialog(resources.getString("dm.info"), resources.getString("main.deleteRow"),
                 new Alert(Alert.AlertType.INFORMATION, "", YES, NO, CANCEL));
         if (yes) {

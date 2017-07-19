@@ -18,8 +18,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import static com.andrey.main.bl.access.PermissionAction.*;
-import static com.andrey.main.dl.dao.ApplicationProperties.*;
-import static com.andrey.main.dl.dao.InitialData.*;
+import static com.andrey.main.dl.dao.utils.ApplicationProperties.*;
+import static com.andrey.main.dl.dao.utils.InitialData.*;
 
 
 
@@ -27,10 +27,7 @@ public class MainController implements Initializable {
 
     @FXML
     private Menu menuEdit;
-    @FXML
-    private MenuItem menuEditDelete;
-    @FXML
-    private MenuBar menuBar;
+
     @FXML
     private CheckMenuItem checkItemFlights;
     @FXML
@@ -94,7 +91,6 @@ public class MainController implements Initializable {
 
         initListner();
         initControllers();
-//        changeUser();
 
         proxyFlightController = (ProxyOperations) AccessHandler.newInstance(flightController);
         proxyPassengerController = (ProxyOperations) AccessHandler.newInstance(passengerController);
@@ -104,8 +100,9 @@ public class MainController implements Initializable {
 
     public void changeUser() {
         lbUser.setText(CURRENT_USER.getName());
-        String roles = CURRENT_USER.getPermissions().toString();
-        lbRole.setText(roles.substring(1, roles.length() - 1));
+        String roles = CURRENT_USER.getPermissionAction().toString();
+//        lbRole.setText(roles.substring(1, roles.length() - 1));
+        lbRole.setText(roles);
         accessToMenu();
     }
 
@@ -217,24 +214,6 @@ public class MainController implements Initializable {
         DialogManager.showInfoDialog(resourceBundle.getString("dm.info"), resourceBundle.getString("main.language.change"));
     }
 
-//    @FXML
-//    public void changeToAdmin() {
-//        CURRENT_USER = USER_ADMIN;
-//        changeUser();
-//    }
-//
-//    @FXML
-//    public void changeToStaff() {
-//        CURRENT_USER = USER_STAFF;
-//        changeUser();
-//    }
-//
-//    @FXML
-//    public void changeToGuest() {
-//        CURRENT_USER = USER_GUEST;
-//        changeUser();
-//    }
-
     @FXML
     public void closeApp() {
         System.exit(0);
@@ -262,8 +241,6 @@ public class MainController implements Initializable {
             doOperation(tab, command, ProxyOperations);
         } else if (tab.isSelected()) {
             DialogManager.showInfoDialog(resourceBundle.getString("dm.info"), resourceBundle.getString("main.not_select_row"));
-//            boolean yes = DialogManager.showInfoDialog(resourceBundle.getString("dm.info"), resourceBundle.getString("main.not_select_row"),
-//                    new Alert(Alert.AlertType.INFORMATION, "", YES, NO, CANCEL));
         }
     }
 
@@ -295,26 +272,5 @@ public class MainController implements Initializable {
     private void showTickets() {
         showTab(tabPane, tabTickets, checkItemTickets);
     }
-
-//    @FXML
-//    private void tabCloseFlights() {
-//        if (checkItemFlights.isSelected()) {
-//            checkItemFlights.setSelected(false);
-//        }
-//    }
-//
-//    @FXML
-//    private void tabClosePassengers(Event event) {
-//        if (checkItemPassengers.isSelected()) {
-//            checkItemPassengers.setSelected(false);
-//        }
-//    }
-//
-//    @FXML
-//    private void tabCloseTickets(Event event) {
-//        if (checkItemTickets.isSelected()) {
-//            checkItemTickets.setSelected(false);
-//        }
-//    }
 
 }

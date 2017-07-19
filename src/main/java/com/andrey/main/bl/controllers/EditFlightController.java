@@ -24,14 +24,11 @@ import java.util.ResourceBundle;
 public class EditFlightController implements Initializable {
 
     @FXML
-//    private TextField txtNumFlight;
     private ComboBox<Flight> txtNumFlight;
     @FXML
     private LocalDateTimeTextField txtDate;
     @FXML
     private TextField txtCity;
-    //    @FXML
-//    private TextField txtTo;
     @FXML
     private ComboBox cbTerminal;
     @FXML
@@ -49,23 +46,16 @@ public class EditFlightController implements Initializable {
     private ResourceBundle resources;
 
     private FlightService flightService = new FlightService();
-//    private FlightController flightController = FlightController.getInstance();
-
-//    private List<Airport> airportList = ParserAirPort.convertFileToAirport("D:\\airport\\airports.csv");
-
 
     public Destination getDestination() {
         return destination;
     }
 
     public void setDestination(Destination destination) {
-//        System.out.println("setDestination:" + destination);
-
         this.destination = destination;
         if (destination.getId() == 0) {
             txtNumFlight.getSelectionModel().select(null);
             txtDate.setLocalDateTime(LocalDateTime.now());
-//            txtDate.setPromptText("Date");
             txtCity.clear();
             cbTerminal.getSelectionModel().select(null);
             cbStatus.getSelectionModel().select(null);
@@ -73,14 +63,9 @@ public class EditFlightController implements Initializable {
             return;
         }
 
-        System.out.println("sets fields");
-//        this.destination = destination;
-
-//        txtNumFlight.setText(destination.getFlight().getNumber());
         txtNumFlight.setValue(destination.getFlight());
         txtDate.setLocalDateTime(destination.getDate());
         txtCity.setText(destination.getCity());
-//        txtTo.setText(destination.getTo());
         cbTerminal.setValue(destination.getTerminal());
         cbStatus.getSelectionModel().select(destination.getStatus().ordinal());
         txtGate.setText(destination.getGate());
@@ -94,19 +79,6 @@ public class EditFlightController implements Initializable {
         initTerminals();
         initFlightNumber();
         cbStatus.setItems(FXCollections.observableArrayList(FlightStatus.values()));
-
-
-//        Set<String> listCities = airportList.stream()
-//                .map(c -> c.getCity())
-//                .collect(Collectors.toSet());
-
-
-//        for (String listCity : listCities) {
-//            System.out.println(listCity);
-//        }
-
-//        TextFields.bindAutoCompletion(txtCity, listCities);
-//        TextFields.bindAutoCompletion(txtTo, listCities);
     }
 
     private void initFlightNumber() {
@@ -129,26 +101,17 @@ public class EditFlightController implements Initializable {
             return;
         }
 
-//        String number = txtNumFlight.getText();
         Flight flight = txtNumFlight.getSelectionModel().getSelectedItem();
         LocalDateTime date = txtDate.getLocalDateTime();
         String city = txtCity.getText();
-//        String to = txtTo.getText();
         char terminal = (char) cbTerminal.getSelectionModel().getSelectedItem();
         FlightStatus status = FlightStatus.valueOf(String.valueOf(cbStatus.getSelectionModel().getSelectedItem()));
         String gate = txtGate.getText();
 
 
-//        Flight flightEdit = null;
         if (getDestination() != null) {
             destination.setId(getDestination().getId());
         }
-//        destination.setNumber(number);
-
-//        flightService.getById()
-//
-//        Flight flight = new Flight();
-//        flight.setNumber(number);
 
         destination.setFlight(flight);
         destination.setDate(date);
@@ -156,9 +119,6 @@ public class EditFlightController implements Initializable {
         destination.setTerminal(terminal);
         destination.setStatus(status);
         destination.setGate(gate);
-
-//        this.destination = flightEdit;
-        System.out.println("saveFlight" + getDestination());
 
         actionClose(actionEvent);
 
@@ -172,7 +132,6 @@ public class EditFlightController implements Initializable {
                 txtGate.getText().trim().length() == 0
                 ) {
             DialogManager.showErrorDialog(resources.getString("dm.error"), resources.getString("main.validData"));
-            System.out.println("not valid destination");
             return false;
         }
         return true;

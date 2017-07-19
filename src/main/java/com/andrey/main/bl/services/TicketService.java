@@ -1,9 +1,9 @@
 package com.andrey.main.bl.services;
 
+import com.andrey.main.bl.operations.ServiceOperation;
 import com.andrey.main.dl.dao.TicketDAO;
 import com.andrey.main.dl.models.Ticket;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class TicketService implements ServiceOperation<Ticket> {

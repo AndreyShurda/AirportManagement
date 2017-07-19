@@ -2,18 +2,7 @@ package com.andrey.main.bl.Utils;
 
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
-
-import javax.crypto.Cipher;
-import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.security.GeneralSecurityException;
-import java.security.NoSuchAlgorithmException;
-import java.util.Scanner;
 
 
 public class CryptoUtils {

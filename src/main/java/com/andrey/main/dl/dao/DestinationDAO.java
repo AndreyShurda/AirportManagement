@@ -1,6 +1,7 @@
 package com.andrey.main.dl.dao;
 
 
+import com.andrey.main.dl.dao.utils.InitialData;
 import com.andrey.main.dl.models.Arrivals;
 import com.andrey.main.dl.models.Departures;
 import com.andrey.main.dl.models.Destination;
@@ -9,7 +10,7 @@ import org.hibernate.criterion.Restrictions;
 
 import java.util.List;
 
-import static com.andrey.main.dl.dao.HibernateDBUtil.operationCRUD;
+import static com.andrey.main.dl.dao.utils.HibernateDBUtil.operationCRUD;
 
 public class DestinationDAO {
     private static DestinationDAO instance = new DestinationDAO();

@@ -27,23 +27,6 @@ public class Passenger implements Serializable {
     public Passenger() {
     }
 
-//    public Passenger(String flightNumber, String firstName, String lastName, String nationality, String passport, LocalDate birthday, Gender gender, ClassType classType) {
-//        this.flightNumber = flightNumber;
-//        this.firstName = firstName;
-//        this.lastName = lastName;
-//        this.nationality = nationality;
-//        this.passport = passport;
-//        this.birthday = birthday;
-//        this.gender = gender;
-//        this.classType = classType;
-//    }
-//
-//    public Passenger(long id, String flightNumber, String firstName, String lastName, String nationality, String passport, LocalDate birthday, Gender gender, ClassType classType) {
-//        this(flightNumber, firstName, lastName, nationality, passport, birthday, gender, classType);
-//        this.id = id;
-//
-//    }
-
     public long getId() {
         return id;
     }

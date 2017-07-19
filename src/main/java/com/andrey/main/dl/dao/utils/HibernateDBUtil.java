@@ -1,4 +1,4 @@
-package com.andrey.main.dl.dao;
+package com.andrey.main.dl.dao.utils;
 
 
 import org.apache.log4j.Logger;
@@ -7,18 +7,13 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
-import java.util.List;
-
 
 public class HibernateDBUtil {
-//    private static SessionFactory factory = new Configuration().configure().buildSessionFactory();
     private static SessionFactory factory = buildSessionFactory();
 
     //    private static SessionFactory factory;
     private static final Logger log = Logger.getLogger(HibernateDBUtil.class);
-//    public static void setFactory(SessionFactory factory) {
-//        HibernateDBUtil.factory = factory;
-//    }
+
 
     private static SessionFactory buildSessionFactory() {
         try {

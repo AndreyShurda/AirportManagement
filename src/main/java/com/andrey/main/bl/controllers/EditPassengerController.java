@@ -2,7 +2,6 @@ package com.andrey.main.bl.controllers;
 
 import com.andrey.main.bl.Utils.DialogManager;
 import com.andrey.main.bl.Utils.FXUtil;
-import com.andrey.main.bl.services.DestinationService;
 import com.andrey.main.bl.services.FlightService;
 import com.andrey.main.dl.data.ClassType;
 import com.andrey.main.dl.data.Gender;
@@ -82,8 +81,6 @@ public class EditPassengerController implements Initializable {
 
     public void setPassenger(Passenger passenger) {
         initFlightNumber();
-//        List<Flight> all = flightService.getAll();
-//        txtIdFlight.setItems(FXCollections.observableArrayList(all));
         this.passenger = passenger;
 
         if (passenger.getId() == 0) {

@@ -1,12 +1,9 @@
 package com.andrey.main.bl.Utils;
 
 import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-
 import static javafx.scene.control.Alert.AlertType.ERROR;
 import static javafx.scene.control.Alert.AlertType.INFORMATION;
 import static javafx.scene.control.Alert.AlertType.WARNING;
-import static javafx.scene.control.ButtonType.*;
 
 public class DialogManager {
 
@@ -32,12 +29,10 @@ public class DialogManager {
 
 
     private static void showMsg(String title, String text, Alert alert) {
-//        Alert alert = new Alert(alertType,"", YES, NO, CANCEL);
         alert.setTitle(title);
         alert.setContentText(text);
         alert.setHeaderText("");
         alert.showAndWait();
-//        return alert.getResult().getButtonData().ordinal();
     }
 
 

@@ -5,7 +5,7 @@ import org.apache.log4j.Logger;
 
 import java.util.List;
 
-import static com.andrey.main.dl.dao.HibernateDBUtil.operationCRUD;
+import static com.andrey.main.dl.dao.utils.HibernateDBUtil.operationCRUD;
 
 
 public class TicketDAO implements OperationDAO<Ticket> {
@@ -29,9 +29,7 @@ public class TicketDAO implements OperationDAO<Ticket> {
     public void delete(long id) {
         Ticket ticket = getById(id);
         log.info("delete record: " + ticket);
-        operationCRUD(session -> {
-            session.delete(ticket);
-        });
+        operationCRUD(session -> session.delete(ticket));
     }
 
     @Override

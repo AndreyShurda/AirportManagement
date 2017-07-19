@@ -3,7 +3,7 @@ package com.andrey.main.dl.dao;
 import com.andrey.main.dl.models.Passenger;
 import org.apache.log4j.Logger;
 import java.util.List;
-import static com.andrey.main.dl.dao.HibernateDBUtil.operationCRUD;
+import static com.andrey.main.dl.dao.utils.HibernateDBUtil.operationCRUD;
 
 public class PassengerDAO implements OperationDAO<Passenger> {
     private static PassengerDAO instance = new PassengerDAO();

@@ -104,14 +104,15 @@ public class Destination implements Serializable{
 
     @Override
     public String toString() {
-        return "Destination{" +
+        return
+//                "Destination{" +
                 "id=" + id +
                 ", date=" + date +
                 ", city='" + city + '\'' +
                 ", terminal=" + terminal +
                 ", status=" + status +
                 ", gate='" + gate + '\'' +
-                ", flight=" + flight +
-                '}';
+                ", flight=" + flight ;
+//                '}';
     }
 }

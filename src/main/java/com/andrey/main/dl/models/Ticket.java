@@ -20,17 +20,6 @@ public class Ticket implements Serializable {
     public Ticket() {
     }
 
-//    public Ticket(String flight, double price, ClassType classType) {
-//        this.flight = flight;
-//        this.price = price;
-//        this.classType = classType;
-//    }
-//
-//    public Ticket(long idTicket, String flight, double price, ClassType classType) {
-//        this(flight, price, classType);
-//        this.idTicket = idTicket;
-//    }
-
     public long getIdTicket() {
         return idTicket;
     }

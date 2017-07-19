@@ -1,9 +1,10 @@
 package com.andrey.main.dl.dao;
 
+import com.andrey.main.dl.dao.utils.InitialData;
 import com.andrey.main.dl.models.Flight;
 import org.apache.log4j.Logger;
 import java.util.List;
-import static com.andrey.main.dl.dao.HibernateDBUtil.operationCRUD;
+import static com.andrey.main.dl.dao.utils.HibernateDBUtil.operationCRUD;
 
 public class FlightDAO implements OperationDAO<Flight> {
     private static FlightDAO instance = new FlightDAO();
