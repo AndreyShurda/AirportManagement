@@ -1,35 +1,28 @@
 package com.andrey.main.bl.controllers;
 
 
-import com.andrey.main.bl.Utils.FXUtil;
-import com.andrey.main.bl.access.PermissionAction;
+import com.andrey.main.bl.Utils.CryptoUtils;
+import com.andrey.main.bl.Utils.DialogManager;
 import com.andrey.main.bl.services.UserEntityService;
 import com.andrey.main.dl.dao.InitialData;
 import com.andrey.main.dl.models.User;
 import com.andrey.main.dl.models.UserEntity;
 import com.andrey.main.ui.FXMain;
-import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
-import java.util.Locale;
 import java.util.ResourceBundle;
 
 import static com.andrey.main.dl.dao.InitialData.LOCALE_VALUE;
@@ -77,7 +70,9 @@ public class AuthorizationController implements Initializable {
 //                initRootLayout(mainStage);
                 actionClose();
                 primaryStage = initRootLayout();
-
+                txtUser.clear();
+                txtPassword.clear();
+                lbInfo.setVisible(false);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -88,7 +83,7 @@ public class AuthorizationController implements Initializable {
     private boolean isValidUser(String userName, String password) {
         List<UserEntity> users = userEntityService.getAll();
         for (UserEntity userEntity : users) {
-            if (userEntity.getName().equals(userName) && userEntity.getPassword().equals(password)) {
+            if (userEntity.getName().equals(userName) && CryptoUtils.decode(userEntity.getPassword()).equals(password)) {
                 System.out.println("This user is register");
 //                System.out.println(userEntity);
                 User currentUser = new User();
@@ -97,6 +92,10 @@ public class AuthorizationController implements Initializable {
                 InitialData.CURRENT_USER = currentUser;
                 System.out.println(InitialData.CURRENT_USER);
                 return true;
+            }else {
+//                DialogManager.showInfoDialog(resources.getString("dm.info"), resources.getString("authorization.wrongUser"));
+                lbInfo.setText(resources.getString("authorization.wrongUser"));
+                lbInfo.setVisible(true);
             }
         }
         return false;
@@ -163,8 +162,8 @@ public class AuthorizationController implements Initializable {
     }
 
     private boolean isValidAuthorization() {
-        return isValidField(txtUser, "Fill user name") &&
-                isValidField(txtPassword, "Fill user password");
+        return isValidField(txtUser, resources.getString("authorization.fillLogin")) &&
+                isValidField(txtPassword, resources.getString("authorization.fillPassword"));
     }
 
     private boolean isValidField(TextField textField, String text) {

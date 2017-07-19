@@ -5,7 +5,6 @@ import java.io.*;
 import java.util.Properties;
 
 public class ApplicationProperties {
-    //    private static final String PATH_TO_FILE = "/conf/db.properties";
     private static final String PATH_TO_FILE = new GetPath().getAbsolutePathFile("/configuration/db.properties");
     public static Properties properties = readProperties(PATH_TO_FILE);
 

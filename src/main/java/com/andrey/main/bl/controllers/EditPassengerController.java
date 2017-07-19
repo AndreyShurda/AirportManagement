@@ -2,6 +2,7 @@ package com.andrey.main.bl.controllers;
 
 import com.andrey.main.bl.Utils.DialogManager;
 import com.andrey.main.bl.Utils.FXUtil;
+import com.andrey.main.bl.services.DestinationService;
 import com.andrey.main.bl.services.FlightService;
 import com.andrey.main.dl.data.ClassType;
 import com.andrey.main.dl.data.Gender;
@@ -72,10 +73,7 @@ public class EditPassengerController implements Initializable {
     }
 
     private void initFlightNumber() {
-//        TextFields.bindAutoCompletion(txtIdFlight, initFlightNumber());
-//        FlightService flightService = new FlightService();
         txtIdFlight.setItems(FXCollections.observableArrayList(flightService.getAll()));
-
     }
 
     public Passenger getPassenger() {

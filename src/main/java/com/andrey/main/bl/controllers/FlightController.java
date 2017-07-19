@@ -6,15 +6,17 @@ import com.andrey.main.bl.access.AccessHandler;
 import com.andrey.main.bl.access.MyPermission;
 import com.andrey.main.bl.access.PermissionAction;
 import com.andrey.main.bl.operations.ProxyOperations;
-import com.andrey.main.bl.services.FlightService;
-import com.andrey.main.dl.dao.FlightDAO;
+import com.andrey.main.bl.services.DestinationService;
+import com.andrey.main.dl.dao.DestinationDAO;
 import com.andrey.main.dl.dao.InitialData;
 import com.andrey.main.dl.data.FlightStatus;
+import com.andrey.main.dl.models.Arrivals;
+import com.andrey.main.dl.models.Departures;
+import com.andrey.main.dl.models.Destination;
 import com.andrey.main.dl.models.Flight;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -35,7 +37,10 @@ import static com.andrey.main.dl.dao.InitialData.PATH_BUNDLES_LOCALE;
 import static javafx.scene.control.ButtonType.*;
 
 public class FlightController implements Initializable, ProxyOperations {
-
+    @FXML
+    private ToggleButton btnArrivals;
+    @FXML
+    private ToggleButton btnDepartures;
     @FXML
     private TextField txtSearch;
     @FXML
@@ -46,31 +51,30 @@ public class FlightController implements Initializable, ProxyOperations {
     //    @FXML
 //    private ToggleGroup groupButton = new ToggleGroup();
     //    @FXML
-    public TableView<Flight> tableFlight;
+    public TableView<Destination> tableFlight;
     @FXML
     private MenuItem conMenuNew;
     //    @FXML
-//    private TableColumn<Flight, Integer> columnId;
+//    private TableColumn<Destination, Integer> columnId;
     @FXML
     private TableColumn<Flight, String> columnNumber;
     @FXML
-    private TableColumn<Flight, LocalDateTime> columnDateTime;
+    private TableColumn<Destination, LocalDateTime> columnDateTime;
     @FXML
-    private TableColumn<Flight, String> city;
+    private TableColumn<Destination, String> city;
     @FXML
-    private TableColumn<Flight, Character> columnTerminal;
+    private TableColumn<Destination, Character> columnTerminal;
     @FXML
-    private TableColumn<Flight, FlightStatus> columnStatus;
+    private TableColumn<Destination, FlightStatus> columnStatus;
     @FXML
-    private TableColumn<Flight, String> columnGate;
+    private TableColumn<Destination, String> columnGate;
 
     @FXML
     private Label labelCount;
 
-    private ObservableList<Flight> flights = FXCollections.observableArrayList();
+    private ObservableList<Destination> flights = FXCollections.observableArrayList();
     //    private FlightDAO flightDAO = FlightDAO.getInstance();
-    private FlightService flightService
-            = new FlightService();
+    private DestinationService destinationService = new DestinationService();
     private ResourceBundle resources;
     private URL location;
 
@@ -99,15 +103,13 @@ public class FlightController implements Initializable, ProxyOperations {
 
     }
 
+
     private void initEditDialog() {
 
-//        System.out.println("FlightControllerFX initEditDialog()");
         try {
             URL resource = getClass().getResource("/fxml/editFlying.fxml");
-//        System.out.println("resources: " + resources);
             fxmlLoader.setLocation(resource);
             fxmlLoader.setResources(ResourceBundle.getBundle(PATH_BUNDLES_LOCALE, LOCALE_VALUE));
-//            fxmlLoader.setResources(ResourceBundle.getBundle("test.bundles.Locale", new Locale("ru")));
 
             fxmlEdit = fxmlLoader.load();
             editFlightController = fxmlLoader.getController();
@@ -117,25 +119,23 @@ public class FlightController implements Initializable, ProxyOperations {
     }
 
     private void initTable() {
-//        columnId.setCellValueFactory(new PropertyValueFactory<Flight, Integer>("id"));
-        columnNumber.setCellValueFactory(new PropertyValueFactory<Flight, String>("number"));
-        columnDateTime.setCellValueFactory(new PropertyValueFactory<Flight, LocalDateTime>("date"));
-        city.setCellValueFactory(new PropertyValueFactory<Flight, String>("city"));
-//        columnTo.setCellValueFactory(new PropertyValueFactory<Flight, String>("to"));
-        columnTerminal.setCellValueFactory(new PropertyValueFactory<Flight, Character>("terminal"));
-        columnStatus.setCellValueFactory(new PropertyValueFactory<Flight, FlightStatus>("status"));
-        columnGate.setCellValueFactory(new PropertyValueFactory<Flight, String>("gate"));
+        columnNumber.setCellValueFactory(new PropertyValueFactory<Flight, String>("flight"));
+        columnDateTime.setCellValueFactory(new PropertyValueFactory<Destination, LocalDateTime>("date"));
+        city.setCellValueFactory(new PropertyValueFactory<Destination, String>("city"));
+        columnTerminal.setCellValueFactory(new PropertyValueFactory<Destination, Character>("terminal"));
+        columnStatus.setCellValueFactory(new PropertyValueFactory<Destination, FlightStatus>("status"));
+        columnGate.setCellValueFactory(new PropertyValueFactory<Destination, String>("gate"));
 
-        flights.addAll(flightService.getAll());
+        flights.addAll(destinationService.getAll());
 
         tableFlight.setItems(flights);
         updateCountLable();
     }
 
     private void initListner() {
-        flights.addListener(new ListChangeListener<Flight>() {
+        flights.addListener(new ListChangeListener<Destination>() {
             @Override
-            public void onChanged(Change<? extends Flight> c) {
+            public void onChanged(Change<? extends Destination> c) {
                 updateCountLable();
             }
         });
@@ -168,15 +168,13 @@ public class FlightController implements Initializable, ProxyOperations {
     }
 
     private void editFlight() {
-        Flight selectedFlight = (Flight) tableFlight.getSelectionModel().getSelectedItem();
-        editFlightController.setFlight(selectedFlight);
+        Destination selectedFlight = (Destination) tableFlight.getSelectionModel().getSelectedItem();
+        editFlightController.setDestination(selectedFlight);
         showDialog();
-        Flight flightEdit = editFlightController.getFlight();
+        Destination flightEdit = editFlightController.getDestination();
         System.out.println("editRow" + flightEdit);
-        if (!selectedFlight.equals(flightEdit)) {
-            flightService.update(flightEdit);
-            flights.set(tableFlight.getSelectionModel().getSelectedIndex(), flightEdit);
-        }
+        destinationService.update(flightEdit);
+        flights.set(tableFlight.getSelectionModel().getSelectedIndex(), flightEdit);
     }
 
     @FXML
@@ -185,19 +183,25 @@ public class FlightController implements Initializable, ProxyOperations {
     }
 
     private void createFlight() {
-        editFlightController.setFlight(new Flight());
+        if (btnArrivals.isSelected()) {
+            editFlightController.setDestination(new Arrivals());
+        }
+        if (btnDepartures.isSelected()) {
+            editFlightController.setDestination(new Departures());
+        }
+
         showDialog();
-        Flight newFlight = editFlightController.getFlight();
-        if (newFlight.hashCode() != 0) {
-//        System.out.println("newFlight = " + newFlight);
-            flightService.add(newFlight);
+        Destination destination = editFlightController.getDestination();
+
+        if (destination.hashCode() != 0) {
+            destinationService.add(destination);
             updateTable();
         }
     }
 
     private void updateTable() {
         flights.clear();
-        flights.addAll(flightService.getAll());
+        flights.addAll(destinationService.getAll());
     }
 
     private void updateCountLable() {
@@ -208,7 +212,6 @@ public class FlightController implements Initializable, ProxyOperations {
     private void showDialog() {
         fxmlLoader.setResources(ResourceBundle.getBundle(PATH_BUNDLES_LOCALE, LOCALE_VALUE));
         editDialogStage = FXUtil.showDialog(fxmlEdit, editDialogStage);
-//        editDialogStage = FXUtil.showDialog(new ActionEvent(), fxmlEdit, editDialogStage);
     }
 
     @Override
@@ -230,7 +233,7 @@ public class FlightController implements Initializable, ProxyOperations {
         boolean yes = DialogManager.showInfoDialog(resources.getString("dm.info"), resources.getString("main.deleteRow"),
                 new Alert(Alert.AlertType.INFORMATION, "", YES, NO, CANCEL));
         if (yes) {
-            flightService.delete((Flight) tableFlight.getSelectionModel().getSelectedItem());
+            destinationService.delete((Destination) tableFlight.getSelectionModel().getSelectedItem());
             flights.remove(tableFlight.getSelectionModel().getSelectedIndex());
         }
     }
@@ -238,12 +241,12 @@ public class FlightController implements Initializable, ProxyOperations {
     @FXML
     private void search() {
         String text = txtSearch.getText();
-        List<Flight> list = null;
+        List<Destination> list = null;
         if (rbByNumber.isSelected()) {
-            list = flightService.searchByNumber(text);
+            list = destinationService.searchByNumber(text);
         }
         if (rbByCity.isSelected()) {
-            list = flightService.searchByCity(text);
+            list = destinationService.searchByCity(text);
         }
         flights.clear();
         flights.addAll(list);
@@ -251,13 +254,13 @@ public class FlightController implements Initializable, ProxyOperations {
 
     @FXML
     private void showArrivals() {
-        FlightDAO.setTABLE(InitialData.TABLE_ARRIVALS);
+        DestinationDAO.setTABLE(InitialData.TABLE_ARRIVALS);
         updateTable();
     }
 
     @FXML
     private void showDepartures() {
-        FlightDAO.setTABLE(InitialData.TABLE_DEPARTURES);
+        DestinationDAO.setTABLE(InitialData.TABLE_DEPARTURES);
         updateTable();
     }
 }

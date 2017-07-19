@@ -64,7 +64,6 @@ public class Ticket implements Serializable {
     }
 
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -74,7 +73,8 @@ public class Ticket implements Serializable {
 
         if (idTicket != ticket.idTicket) return false;
         if (Double.compare(ticket.price, price) != 0) return false;
-        return classType == ticket.classType;
+        if (classType != ticket.classType) return false;
+        return flight != null ? flight.equals(ticket.flight) : ticket.flight == null;
 
     }
 
@@ -86,6 +86,7 @@ public class Ticket implements Serializable {
         temp = Double.doubleToLongBits(price);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         result = 31 * result + (classType != null ? classType.hashCode() : 0);
+        result = 31 * result + (flight != null ? flight.hashCode() : 0);
         return result;
     }
 

@@ -6,7 +6,6 @@ import com.andrey.main.bl.access.MyPermission;
 import com.andrey.main.bl.access.PermissionUtils;
 import com.andrey.main.bl.operations.ProxyOperations;
 import com.andrey.main.ui.FXMain;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -21,9 +20,7 @@ import java.util.ResourceBundle;
 import static com.andrey.main.bl.access.PermissionAction.*;
 import static com.andrey.main.dl.dao.ApplicationProperties.*;
 import static com.andrey.main.dl.dao.InitialData.*;
-import static javafx.scene.control.ButtonType.CANCEL;
-import static javafx.scene.control.ButtonType.NO;
-import static javafx.scene.control.ButtonType.YES;
+
 
 
 public class MainController implements Initializable {
@@ -102,18 +99,11 @@ public class MainController implements Initializable {
         proxyFlightController = (ProxyOperations) AccessHandler.newInstance(flightController);
         proxyPassengerController = (ProxyOperations) AccessHandler.newInstance(passengerController);
         proxyTicketController = (ProxyOperations) AccessHandler.newInstance(ticketController);
-//        proxyTicketController = (MenuItemsEdit) Proxy.newProxyInstance(
-//                ClassLoader.getSystemClassLoader(),
-//                new Class[]{MenuItemsEdit.class},
-//                new AccessHandler(ticketController));
+
     }
 
     public void changeUser() {
         lbUser.setText(CURRENT_USER.getName());
-//        String roles = "";
-//        for (PermissionAction permissionAction : CURRENT_USER.getPermissions()) {
-//            roles = permissionAction.name();
-//        }
         String roles = CURRENT_USER.getPermissions().toString();
         lbRole.setText(roles.substring(1, roles.length() - 1));
         accessToMenu();
@@ -122,11 +112,11 @@ public class MainController implements Initializable {
     @MyPermission(value = {STAFF, ADMIN})
     public void accessToMenu() {
         if (!PermissionUtils.processPermission(this.getClass(), "accessToMenu")) {
-            checkItemFlights.setDisable(true);
+//            checkItemFlights.setDisable(true);
             checkItemPassengers.setDisable(true);
             menuEdit.setDisable(true);
         } else {
-            checkItemFlights.setDisable(false);
+//            checkItemFlights.setDisable(false);
             checkItemPassengers.setDisable(false);
             menuEdit.setDisable(false);
         }
@@ -224,6 +214,7 @@ public class MainController implements Initializable {
     private void setLanguage(String language) {
         writeProperty("language", language);
         savePropertiesToFile();
+        DialogManager.showInfoDialog(resourceBundle.getString("dm.info"), resourceBundle.getString("main.language.change"));
     }
 
 //    @FXML

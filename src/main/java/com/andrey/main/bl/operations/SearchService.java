@@ -34,7 +34,9 @@ public class SearchService implements SearchFlight, SearchPassenger, SearchTicke
 
     @Override
     public List<Flight> byPort(String port) {
-        return search(flights.getAll(), c -> searchInWord(c.getCity(), port));
+
+//        return search(flights.getAll(), c -> searchInWord(c.getCity(), port));
+        return null;
     }
 
 

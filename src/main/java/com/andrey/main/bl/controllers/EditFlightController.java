@@ -2,7 +2,9 @@ package com.andrey.main.bl.controllers;
 
 import com.andrey.main.bl.Utils.DialogManager;
 import com.andrey.main.bl.Utils.FXUtil;
+import com.andrey.main.bl.services.FlightService;
 import com.andrey.main.dl.data.FlightStatus;
+import com.andrey.main.dl.models.Destination;
 import com.andrey.main.dl.models.Flight;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -22,7 +24,8 @@ import java.util.ResourceBundle;
 public class EditFlightController implements Initializable {
 
     @FXML
-    private TextField txtNumFlight;
+//    private TextField txtNumFlight;
+    private ComboBox<Flight> txtNumFlight;
     @FXML
     private LocalDateTimeTextField txtDate;
     @FXML
@@ -42,23 +45,25 @@ public class EditFlightController implements Initializable {
     private Button btnClose;
 
 
-    private Flight flight;
+    private Destination destination;
     private ResourceBundle resources;
+
+    private FlightService flightService = new FlightService();
 //    private FlightController flightController = FlightController.getInstance();
 
 //    private List<Airport> airportList = ParserAirPort.convertFileToAirport("D:\\airport\\airports.csv");
 
 
-    public Flight getFlight() {
-        return flight;
+    public Destination getDestination() {
+        return destination;
     }
 
-    public void setFlight(Flight flight) {
-        System.out.println("setFlight:" + flight);
+    public void setDestination(Destination destination) {
+//        System.out.println("setDestination:" + destination);
 
-        this.flight = flight;
-        if (flight.getId() == 0) {
-            txtNumFlight.clear();
+        this.destination = destination;
+        if (destination.getId() == 0) {
+            txtNumFlight.getSelectionModel().select(null);
             txtDate.setLocalDateTime(LocalDateTime.now());
 //            txtDate.setPromptText("Date");
             txtCity.clear();
@@ -69,15 +74,16 @@ public class EditFlightController implements Initializable {
         }
 
         System.out.println("sets fields");
-//        this.flight = flight;
+//        this.destination = destination;
 
-        txtNumFlight.setText(flight.getNumber());
-        txtDate.setLocalDateTime(flight.getDate());
-        txtCity.setText(flight.getCity());
-//        txtTo.setText(flight.getTo());
-        cbTerminal.setValue(flight.getTerminal());
-        cbStatus.getSelectionModel().select(flight.getStatus().ordinal());
-        txtGate.setText(flight.getGate());
+//        txtNumFlight.setText(destination.getFlight().getNumber());
+        txtNumFlight.setValue(destination.getFlight());
+        txtDate.setLocalDateTime(destination.getDate());
+        txtCity.setText(destination.getCity());
+//        txtTo.setText(destination.getTo());
+        cbTerminal.setValue(destination.getTerminal());
+        cbStatus.getSelectionModel().select(destination.getStatus().ordinal());
+        txtGate.setText(destination.getGate());
 
 
     }
@@ -86,7 +92,7 @@ public class EditFlightController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         this.resources = resources;
         initTerminals();
-
+        initFlightNumber();
         cbStatus.setItems(FXCollections.observableArrayList(FlightStatus.values()));
 
 
@@ -101,6 +107,10 @@ public class EditFlightController implements Initializable {
 
 //        TextFields.bindAutoCompletion(txtCity, listCities);
 //        TextFields.bindAutoCompletion(txtTo, listCities);
+    }
+
+    private void initFlightNumber() {
+        txtNumFlight.setItems(FXCollections.observableArrayList(flightService.getAll()));
     }
 
     private void initTerminals() {
@@ -119,7 +129,8 @@ public class EditFlightController implements Initializable {
             return;
         }
 
-        String number = txtNumFlight.getText();
+//        String number = txtNumFlight.getText();
+        Flight flight = txtNumFlight.getSelectionModel().getSelectedItem();
         LocalDateTime date = txtDate.getLocalDateTime();
         String city = txtCity.getText();
 //        String to = txtTo.getText();
@@ -128,30 +139,40 @@ public class EditFlightController implements Initializable {
         String gate = txtGate.getText();
 
 
-        Flight flightEdit;
-        if (this.flight != null) {
-            flightEdit = new Flight(getFlight().getId(), number, date, city, terminal, status, gate);
-        } else {
-            System.out.println("is null in save");
-            flightEdit = new Flight(number, date, city, terminal, status, gate);
+//        Flight flightEdit = null;
+        if (getDestination() != null) {
+            destination.setId(getDestination().getId());
         }
+//        destination.setNumber(number);
 
-        this.flight = flightEdit;
-        System.out.println("saveFlight" + getFlight());
+//        flightService.getById()
+//
+//        Flight flight = new Flight();
+//        flight.setNumber(number);
+
+        destination.setFlight(flight);
+        destination.setDate(date);
+        destination.setCity(city);
+        destination.setTerminal(terminal);
+        destination.setStatus(status);
+        destination.setGate(gate);
+
+//        this.destination = flightEdit;
+        System.out.println("saveFlight" + getDestination());
 
         actionClose(actionEvent);
 
     }
 
     private boolean isValidFlight() {
-        if (txtNumFlight.getText().trim().length() == 0 || txtDate.getLocalDateTime() == null ||
+        if (txtNumFlight.getSelectionModel().getSelectedItem() == null || txtDate.getLocalDateTime() == null ||
                 txtCity.getText().trim().length() == 0 ||
                 cbTerminal.getSelectionModel().getSelectedItem() == null ||
                 cbStatus.getSelectionModel().getSelectedItem() == null ||
                 txtGate.getText().trim().length() == 0
                 ) {
             DialogManager.showErrorDialog(resources.getString("dm.error"), resources.getString("main.validData"));
-            System.out.println("not valid flight");
+            System.out.println("not valid destination");
             return false;
         }
         return true;

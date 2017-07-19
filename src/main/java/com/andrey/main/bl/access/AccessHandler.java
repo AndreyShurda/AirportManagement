@@ -32,18 +32,14 @@ public class AccessHandler implements InvocationHandler {
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-
         boolean hasPermission = processPermission(target.getClass(), method.getName());
         if (hasPermission) {
             return method.invoke(target, args);
         } else {
-//            DialogManager.showInfoDialog(getClass().getSimpleName(), "can't invoke method: \"" + method.getName() + "\" class \"" + target.getClass().getSimpleName() + "\"");
             String st = InitialData.CURRENT_USER + " " + ResourceBundle.getBundle(PATH_BUNDLES_LOCALE, LOCALE_VALUE).getString("accessHandler.msg") +
                     " " + ResourceBundle.getBundle(PATH_BUNDLES_LOCALE, LOCALE_VALUE).getString("menu.edit." + method.getName());
             System.out.println(st);
-            DialogManager.showInfoDialog(ResourceBundle.getBundle(PATH_BUNDLES_LOCALE, LOCALE_VALUE).getString("dm.info"),
-                    st);
-//                    ResourceBundle.getBundle(PATH_BUNDLES_LOCALE, LOCALE_VALUE).getString("dm.info"));
+            DialogManager.showInfoDialog(ResourceBundle.getBundle(PATH_BUNDLES_LOCALE, LOCALE_VALUE).getString("dm.info"), st);
             return null;
         }
     }

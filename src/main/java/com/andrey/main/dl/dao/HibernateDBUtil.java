@@ -11,12 +11,24 @@ import java.util.List;
 
 
 public class HibernateDBUtil {
-    private static SessionFactory factory = new Configuration().configure().buildSessionFactory();
+//    private static SessionFactory factory = new Configuration().configure().buildSessionFactory();
+    private static SessionFactory factory = buildSessionFactory();
+
     //    private static SessionFactory factory;
     private static final Logger log = Logger.getLogger(HibernateDBUtil.class);
+//    public static void setFactory(SessionFactory factory) {
+//        HibernateDBUtil.factory = factory;
+//    }
 
-    public static void setFactory(SessionFactory factory) {
-        HibernateDBUtil.factory = factory;
+    private static SessionFactory buildSessionFactory() {
+        try {
+            return new Configuration().configure().buildSessionFactory();
+        }
+        catch (Throwable ex) {
+            System.err.println("Initial SessionFactory creation failed." + ex);
+            log.error("Initial SessionFactory creation failed." + ex);
+            throw new ExceptionInInitializerError(ex);
+        }
     }
 
 

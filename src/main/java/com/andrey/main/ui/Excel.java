@@ -36,8 +36,8 @@ public class Excel {
         XSSFSheet sheet = workbook.createSheet("Java Books");
 
         List<Flight> flights = new ArrayList<>();
-        flights.add(new Flight("PS123", LocalDateTime.now(), "Kiev", 'A', FlightStatus.CHECK_IN, "12a"));
-        flights.add(new Flight("PS111", LocalDateTime.now(), "London", 'A', FlightStatus.CHECK_IN, "12a"));
+//        flights.add(new Flight("PS123", LocalDateTime.now(), "Kiev", 'A', FlightStatus.CHECK_IN, "12a"));
+//        flights.add(new Flight("PS111", LocalDateTime.now(), "London", 'A', FlightStatus.CHECK_IN, "12a"));
 
 
         CellStyle style = workbook.createCellStyle();
@@ -61,13 +61,13 @@ public class Excel {
 
         for (Flight flight : flights) {
             Row row = sheet.createRow(++rowCount);
-
+//            row.createCell(0).setCellValue(rowCount);
             row.createCell(1).setCellValue(flight.getNumber());
-            row.createCell(2).setCellValue(flight.getDate().format(DateTimeFormatter.ofPattern("MMM d yyyy")));
-            row.createCell(3).setCellValue(String.valueOf(flight.getCity()));
-            row.createCell(4).setCellValue(String.valueOf(flight.getTerminal()));
-            row.createCell(5).setCellValue(String.valueOf(flight.getStatus()));
-            row.createCell(6).setCellValue(String.valueOf(flight.getGate()));
+//            row.createCell(2).setCellValue(flight.getDate().format(DateTimeFormatter.ofPattern("MMM d yyyy")));
+//            row.createCell(3).setCellValue(String.valueOf(flight.getCity()));
+//            row.createCell(4).setCellValue(String.valueOf(flight.getTerminal()));
+//            row.createCell(5).setCellValue(String.valueOf(flight.getStatus()));
+//            row.createCell(6).setCellValue(String.valueOf(flight.getGate()));
         }
 
 

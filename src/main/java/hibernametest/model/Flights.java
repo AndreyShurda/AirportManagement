@@ -6,6 +6,8 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 @Entity
 public class Flights implements Serializable {
@@ -18,6 +20,14 @@ public class Flights implements Serializable {
     @OneToMany(fetch = FetchType.LAZY,
             cascade = CascadeType.ALL, mappedBy = "flights")
     private List<Tickets> ticketsList = new ArrayList<>();
+
+//    @OneToMany(fetch = FetchType.LAZY,
+//            cascade = CascadeType.ALL, mappedBy = "flights")
+//    private List<FlightArivalls> flightArivallses = new ArrayList<>();
+
+//    @OneToMany(fetch = FetchType.LAZY,
+//            cascade = CascadeType.ALL, mappedBy = "flights")
+//    private List<FlightDepartures> flightDepartures  = new ArrayList<>();
 
     public Flights() {
     }
@@ -49,6 +59,22 @@ public class Flights implements Serializable {
     public void setTicketsList(List<Tickets> ticketsList) {
         this.ticketsList = ticketsList;
     }
+
+//    public List<FlightArivalls> getFlightArivallses() {
+//        return flightArivallses;
+//    }
+//
+//    public void setFlightArivallses(List<FlightArivalls> flightArivallses) {
+//        this.flightArivallses = flightArivallses;
+//    }
+//
+//    public List<FlightDepartures> getFlightDepartures() {
+//        return flightDepartures;
+//    }
+//
+//    public void setFlightDepartures(List<FlightDepartures> flightDepartures) {
+//        this.flightDepartures = flightDepartures;
+//    }
 
     @Override
     public boolean equals(Object o) {

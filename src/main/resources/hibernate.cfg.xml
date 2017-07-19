@@ -15,6 +15,7 @@
         <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/hibernate_test?u‌​seSSL=false</property>
         <property name="hibernate.connection.username">root</property>
         <property name="hibernate.connection.password">32167</property>
+        <property name="hibernate.enable_lazy_load_no_trans">true</property>
         <!--<property name="hibernate.connection.username">root</property>-->
         <!--<property name="hibernate.connection.password">32167</property>-->
 
@@ -25,9 +26,12 @@
         <mapping class="com.andrey.main.dl.models.Passenger"/>
         <mapping class="com.andrey.main.dl.models.Ticket"/>
         <mapping class="com.andrey.main.dl.models.UserEntity"/>
-        <!--<mapping class="com.andrey.main.dl.models.PermissionEntity"/>-->
-        <!--<mapping class="hibernametest.dao.Tickets"/>-->
-        <!--<mapping class="hibernametest.model.Flights"/>-->
+        <mapping class="com.andrey.main.dl.models.Arrivals"/>
+        <mapping class="com.andrey.main.dl.models.Departures"/>
+        <mapping class="hibernametest.dao.Tickets"/>
+        <mapping class="hibernametest.model.Flights"/>
+        <!--<mapping class="hibernametest.model.FlightArivalls"/>-->
+        <!--<mapping class="hibernametest.model.FlightDepartures"/>-->
 
     </session-factory>
 </hibernate-configuration>

@@ -21,7 +21,7 @@
             <children>
             <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="35.0" VBox.vgrow="ALWAYS">
                <children>
-                  <ToggleButton mnemonicParsing="false" onAction="#showArrivals" prefWidth="100.0" selected="true" text="Arrivals">
+                  <ToggleButton fx:id="btnArrivals" mnemonicParsing="false" onAction="#showArrivals" prefWidth="100.0" selected="true" text="%flights.arrivals">
                      <HBox.margin>
                         <Insets left="10.0" right="10.0" top="5.0" />
                      </HBox.margin>
@@ -29,7 +29,7 @@
                         <ToggleGroup fx:id="groupButton" />
                      </toggleGroup>
                   </ToggleButton>
-                  <ToggleButton layoutX="20.0" layoutY="15.0" mnemonicParsing="false" onAction="#showDepartures" prefWidth="100.0" text="Departures" toggleGroup="$groupButton">
+                  <ToggleButton fx:id="btnDepartures" layoutX="20.0" layoutY="15.0" mnemonicParsing="false" onAction="#showDepartures" prefWidth="100.0" text="%flights.departures" toggleGroup="$groupButton">
                      <HBox.margin>
                         <Insets right="10.0" top="5.0" />
                      </HBox.margin>

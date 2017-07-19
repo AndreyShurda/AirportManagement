@@ -17,41 +17,13 @@ public class User extends UserEntity {
     }
 
     public User(String name) {
-//        this.name = name;
         setName(name);
     }
-//
-//    public long getId() {
-//        return id;
-//    }
-//
-//    public void setId(long id) {
-//        this.id = id;
-//    }
-//
-//    public String getName() {
-//        return name;
-//    }
-//
-//    public void setName(String name) {
-//        this.name = name;
-//    }
-//
-//    public String getPassword() {
-//        return password;
-//    }
-//
-//    public void setPassword(String password) {
-//        this.password = password;
-//    }
-//
+
     public List<PermissionAction> getPermissions() {
         return permissions;
     }
 
-//    public void setPermissions(List<PermissionAction> permissions) {
-//        this.permissions = permissions;
-//    }
 
     public void addPermission(PermissionAction permission) {
         List<PermissionAction> permissions = getPermissions();

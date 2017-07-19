@@ -54,7 +54,7 @@ public class FlightDAO implements OperationDAO<Flight> {
     public List<Flight> getAll() {
         final List[] list = new List[1];
         operationCRUD(session -> {
-            list[0] = session.createQuery("FROM Flight ").list();
+            list[0] = session.createQuery("FROM Flight").list();
         });
         log.info("getAll records: " + list[0]);
         return list[0];

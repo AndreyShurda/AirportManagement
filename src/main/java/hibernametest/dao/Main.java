@@ -1,12 +1,20 @@
 package hibernametest.dao;
 
+import com.andrey.main.dl.dao.HibernateDBUtil;
+import com.andrey.main.dl.data.FlightStatus;
+import hibernametest.model.FlightArivalls;
+import com.andrey.main.dl.data.FlightType;
+import hibernametest.model.FlightDepartures;
 import hibernametest.model.Flights;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
+import java.time.LocalDateTime;
 import java.util.List;
+
+import static com.andrey.main.dl.dao.HibernateDBUtil.operationCRUD;
 
 public class Main {
     static SessionFactory factory = null;
@@ -18,22 +26,36 @@ public class Main {
 
         factory = new Configuration().configure().buildSessionFactory();
 //        final Integer[] save = new Integer[1];
-//        doCRUD(session -> {
+//        operationCRUD(session -> {
 //             save[0] = (Integer) session.save(ticket);
 //        });
 //        System.out.println(save[0]);
 //        final List<Tickets>[] list = new List[1];
-        doCRUD(session -> {
+        operationCRUD(session -> {
             List<Flights> list = session.createQuery("FROM Flights ").list();
             for (Flights flights : list) {
                 System.out.println(flights + ": " + flights.getTicketsList());
             }
         });
 
-        doCRUD(session -> {
+        operationCRUD(session -> {
             List<Tickets> list = session.createQuery("FROM Tickets ").list();
             for (Tickets tickets : list) {
-                System.out.println(tickets );
+                System.out.println(tickets);
+            }
+        });
+
+        operationCRUD(session -> {
+            List<FlightArivalls> list = session.createQuery("FROM FlightArivalls ").list();
+            for (FlightArivalls arivalls : list) {
+                System.out.println(arivalls);
+            }
+        });
+
+        operationCRUD(session -> {
+            List<FlightDepartures> list = session.createQuery("FROM FlightDepartures ").list();
+            for (FlightDepartures arivalls : list) {
+                System.out.println(arivalls);
             }
         });
 ////        System.out.println(list);
@@ -42,13 +64,36 @@ public class Main {
 //        }
 
 //        Flights flight = new Flights("WW111");
-//        doCRUD(session -> {
+//        operationCRUD(session -> {
 ////            Flight flight1 = session.get(Flight.class, 3);
 ////            session.delete(flight1);
 ////            session.save(flight);
 //        });
-//
-//        doCRUD(session -> {
+
+//        FlightDepartures flightArivalls = new FlightDepartures();
+        Flights flights = new Flights();
+        flights.setNumber("AS215");
+
+//        operationCRUD(session -> session.save(flights));
+
+
+//        FlightDepartures flightArivalls = new FlightDepartures();
+        FlightArivalls flightArivalls = new FlightArivalls();
+
+        flightArivalls.setCity("London");
+        flightArivalls.setDate(LocalDateTime.now());
+        flightArivalls.setStatus(FlightStatus.ARRIVED);
+        flightArivalls.setTerminal('A');
+        flightArivalls.setGate("12");
+//        flightArivalls.setFlights(flights);
+
+        operationCRUD(session -> {
+            Flights flightsGet = session.get(Flights.class, 1);
+            flightArivalls.setFlights(flightsGet);
+
+            session.save(flightArivalls);
+        });
+//        operationCRUD(session -> {
 ////            Tickets tickets = session.get(Tickets.class, 10);
 ////            System.out.println(tickets);
 ////            tickets.setPrice(999.0);
@@ -69,31 +114,31 @@ public class Main {
 //            session.saveOrUpdate(t);
 //        });
 
-//        doCRUD(session -> session.save(new Flights("PS111")));
+//        operationCRUD(session -> session.save(new Flights("PS111")));
         factory.close();
     }
 
-    private static void doCRUD(Command command) {
-        Session session = factory.openSession();
-        Transaction transaction = null;
-        try {
-            transaction = session.beginTransaction();
-            command.execute(session);
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            e.printStackTrace();
-        } finally {
-            session.close();
-        }
-    }
+//    private static void operationCRUD(Command command) {
+//        Session session = factory.openSession();
+//        Transaction transaction = null;
+//        try {
+//            transaction = session.beginTransaction();
+//            command.execute(session);
+//            transaction.commit();
+//        } catch (Exception e) {
+//            if (transaction != null) {
+//                transaction.rollback();
+//            }
+//            e.printStackTrace();
+//        } finally {
+//            session.close();
+//        }
+//    }
 
-    @FunctionalInterface
-    public interface Command {
-        void execute(Session session);
-    }
+//    @FunctionalInterface
+//    public interface Command {
+//        void execute(Session session);
+//    }
 }
 
 

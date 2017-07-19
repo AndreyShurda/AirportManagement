@@ -2,14 +2,12 @@ package com.andrey.main.bl.controllers;
 
 
 import com.andrey.main.bl.Utils.DialogManager;
-import com.andrey.main.bl.Utils.FXUtil;
+import com.andrey.main.bl.Utils.CryptoUtils;
 import com.andrey.main.bl.access.PermissionAction;
 import com.andrey.main.bl.services.UserEntityService;
-import com.andrey.main.dl.models.User;
 import com.andrey.main.dl.models.UserEntity;
 import com.andrey.main.ui.FXMain;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
@@ -63,12 +61,12 @@ public class CreateUserController implements Initializable {
         PermissionAction role = cbRole.getSelectionModel().getSelectedItem();
         UserEntity user = new UserEntity();
         user.setName(userName);
-        user.setPassword(password);
+        user.setPassword(CryptoUtils.encode(password));
         user.setPermissionAction(role);
         System.out.println(user);
         if (!userEntityService.getAll().contains(user)) {
             System.out.println("new user");
-//            userEntityService.add(user);
+            userEntityService.add(user);
             actionClose();
         } else {
             System.out.println("This user already exists");

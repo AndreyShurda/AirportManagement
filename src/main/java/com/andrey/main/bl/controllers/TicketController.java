@@ -21,6 +21,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 
@@ -109,7 +110,6 @@ public class TicketController implements Initializable, ProxyOperations {
         tableTickets.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) {
                 editRow();
-                System.out.println("cliked 2");
             }
         });
 

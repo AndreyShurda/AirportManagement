@@ -1,6 +1,7 @@
 package com.andrey.main.dl.models;
 
 import com.andrey.main.dl.data.FlightStatus;
+import com.andrey.main.dl.data.FlightType;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -9,19 +10,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Flight implements Serializable{
+public class Flight implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String number;
-    //    private Airplane airplane;
-    private LocalDateTime date;
-    private String city;
-    //    private String to;
-    private char terminal;
-    private FlightStatus status;
-    private String gate;
-//    private Ticket ticket;
+//    private LocalDateTime date;
+//    private String city;
+//    private char terminal;
+//    private FlightStatus status;
+//    private String gate;
+//    private FlightType flightType;
 
     @OneToMany(fetch = FetchType.LAZY,
             cascade = CascadeType.ALL, mappedBy = "flight")
@@ -31,23 +30,29 @@ public class Flight implements Serializable{
             cascade = CascadeType.ALL, mappedBy = "flight")
     private List<Passenger> passengerList = new ArrayList<>();
 
+    @OneToMany(fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL, mappedBy = "flight")
+    private List<Arrivals> arrivalsList = new ArrayList<>();
 
-    public Flight() {
-    }
+    @OneToMany(fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL, mappedBy = "flight")
+    private List<Departures> departuresList = new ArrayList<>();
 
-    public Flight(String number, LocalDateTime date, String city, char terminal, FlightStatus status, String gate) {
-        this.number = number;
-        this.date = date;
-        this.city = city;
-        this.terminal = terminal;
-        this.status = status;
-        this.gate = gate;
-    }
 
-    public Flight(long id, String number, LocalDateTime date, String city, char terminal, FlightStatus status, String gate) {
-        this(number, date, city, terminal, status, gate);
-        this.id = id;
-    }
+
+//    public Flight(String number, LocalDateTime date, String city, char terminal, FlightStatus status, String gate) {
+//        this.number = number;
+//        this.date = date;
+//        this.city = city;
+//        this.terminal = terminal;
+//        this.status = status;
+//        this.gate = gate;
+//    }
+
+//    public Flight(long id, String number, LocalDateTime date, String city, char terminal, FlightStatus status, String gate) {
+//        this(number, date, city, terminal, status, gate);
+//        this.id = id;
+//    }
 
 
     public long getId() {
@@ -66,45 +71,53 @@ public class Flight implements Serializable{
         this.number = number;
     }
 
-    public LocalDateTime getDate() {
-        return date;
-    }
+//    public LocalDateTime getDate() {
+//        return date;
+//    }
+//
+//    public void setDate(LocalDateTime date) {
+//        this.date = date;
+//    }
+//
+//    public String getCity() {
+//        return city;
+//    }
+//
+//    public void setCity(String city) {
+//        this.city = city;
+//    }
+//
+//    public char getTerminal() {
+//        return terminal;
+//    }
+//
+//    public void setTerminal(char terminal) {
+//        this.terminal = terminal;
+//    }
+//
+//    public FlightStatus getStatus() {
+//        return status;
+//    }
+//
+//    public void setStatus(FlightStatus status) {
+//        this.status = status;
+//    }
+//
+//    public String getGate() {
+//        return gate;
+//    }
+//
+//    public void setGate(String gate) {
+//        this.gate = gate;
+//    }
 
-    public void setDate(LocalDateTime date) {
-        this.date = date;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public char getTerminal() {
-        return terminal;
-    }
-
-    public void setTerminal(char terminal) {
-        this.terminal = terminal;
-    }
-
-    public FlightStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(FlightStatus status) {
-        this.status = status;
-    }
-
-    public String getGate() {
-        return gate;
-    }
-
-    public void setGate(String gate) {
-        this.gate = gate;
-    }
+//    public FlightType getFlightType() {
+//        return flightType;
+//    }
+//
+//    public void setFlightType(FlightType flightType) {
+//        this.flightType = flightType;
+//    }
 
     public List<Ticket> getTicketList() {
         return ticketList;
@@ -122,6 +135,38 @@ public class Flight implements Serializable{
         this.passengerList = passengerList;
     }
 
+    public List<Arrivals> getArrivalsList() {
+        return arrivalsList;
+    }
+
+    public void setArrivalsList(List<Arrivals> arrivalsList) {
+        this.arrivalsList = arrivalsList;
+    }
+
+    public List<Departures> getDeparturesList() {
+        return departuresList;
+    }
+
+    public void setDeparturesList(List<Departures> departuresList) {
+        this.departuresList = departuresList;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Flight flight = (Flight) o;
+
+        return number != null ? number.equals(flight.number) : flight.number == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return number != null ? number.hashCode() : 0;
+    }
+
     @Override
     public String toString() {
 //        return "Flight{" +
@@ -136,30 +181,4 @@ public class Flight implements Serializable{
         return number;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Flight flight = (Flight) o;
-
-        if (terminal != flight.terminal) return false;
-        if (number != null ? !number.equals(flight.number) : flight.number != null) return false;
-        if (date != null ? !date.equals(flight.date) : flight.date != null) return false;
-        if (city != null ? !city.equals(flight.city) : flight.city != null) return false;
-        if (status != flight.status) return false;
-        return gate != null ? gate.equals(flight.gate) : flight.gate == null;
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = number != null ? number.hashCode() : 0;
-        result = 31 * result + (date != null ? date.hashCode() : 0);
-        result = 31 * result + (city != null ? city.hashCode() : 0);
-        result = 31 * result + (int) terminal;
-        result = 31 * result + (status != null ? status.hashCode() : 0);
-        result = 31 * result + (gate != null ? gate.hashCode() : 0);
-        return result;
-    }
 }
