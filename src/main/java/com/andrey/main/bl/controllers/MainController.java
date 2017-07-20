@@ -125,23 +125,12 @@ public class MainController implements Initializable {
             FXMLLoader loader = getLoader("/fxml/flights.fxml");
             tabFlights = getTab("flights", loader);
             setFlightController(loader.getController());
-//            tabPane.getTabs().add(tabPassengers);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
 
 
-//        try {
             loader = getLoader("/fxml/passengers.fxml");
-
             tabPassengers = getTab("passengers", loader);
             setPassengerController(loader.getController());
 
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//        try {
             loader = getLoader("/fxml/tickets.fxml");
             tabTickets = getTab("tickets", loader);
             setTicketController(loader.getController());

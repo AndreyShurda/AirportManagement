@@ -1,7 +1,9 @@
 package com.andrey.main.bl.controllers;
 
+import com.andrey.main.bl.Utils.AutoCompleteComboBoxListener;
 import com.andrey.main.bl.Utils.DialogManager;
 import com.andrey.main.bl.Utils.FXUtil;
+import com.andrey.main.bl.Utils.ValidationData;
 import com.andrey.main.bl.services.FlightService;
 import com.andrey.main.dl.data.FlightStatus;
 import com.andrey.main.dl.models.Destination;
@@ -11,7 +13,6 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
@@ -35,12 +36,6 @@ public class EditFlightController implements Initializable {
     private ChoiceBox cbStatus;
     @FXML
     private TextField txtGate;
-
-    @FXML
-    private Button btnSave;
-    @FXML
-    private Button btnClose;
-
 
     private Destination destination;
     private ResourceBundle resources;
@@ -78,6 +73,8 @@ public class EditFlightController implements Initializable {
         this.resources = resources;
         initTerminals();
         initFlightNumber();
+        new AutoCompleteComboBoxListener(txtNumFlight);
+
         cbStatus.setItems(FXCollections.observableArrayList(FlightStatus.values()));
     }
 
@@ -101,7 +98,11 @@ public class EditFlightController implements Initializable {
             return;
         }
 
-        Flight flight = txtNumFlight.getSelectionModel().getSelectedItem();
+        Flight flight = ValidationData.getFlightComboBox(txtNumFlight);
+        if (flight == null) {
+            return;
+        }
+
         LocalDateTime date = txtDate.getLocalDateTime();
         String city = txtCity.getText();
         char terminal = (char) cbTerminal.getSelectionModel().getSelectedItem();

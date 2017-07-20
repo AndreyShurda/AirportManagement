@@ -1,7 +1,9 @@
 package com.andrey.main.bl.controllers;
 
+import com.andrey.main.bl.Utils.AutoCompleteComboBoxListener;
 import com.andrey.main.bl.Utils.DialogManager;
 import com.andrey.main.bl.Utils.FXUtil;
+import com.andrey.main.bl.Utils.ValidationData;
 import com.andrey.main.bl.services.FlightService;
 import com.andrey.main.dl.data.ClassType;
 import com.andrey.main.dl.data.Gender;
@@ -55,6 +57,7 @@ public class EditPassengerController implements Initializable {
         this.resources = resources;
 
         initFlightNumber();
+        new AutoCompleteComboBoxListener(txtIdFlight);
         TextFields.bindAutoCompletion(txtNationality, getListOfCountries());
         cbGender.setItems(FXCollections.observableArrayList(Gender.values()));
         cbClassType.setItems(FXCollections.observableArrayList(ClassType.values()));
@@ -110,7 +113,11 @@ public class EditPassengerController implements Initializable {
             return;
         }
 
-        Flight flight = txtIdFlight.getItems().get(txtIdFlight.getSelectionModel().getSelectedIndex());
+        Flight flight = ValidationData.getFlightComboBox(txtIdFlight);
+        if (flight == null) {
+            return;
+        }
+
         String firstName = txtFirstName.getText();
         String lastName = txtLastName.getText();
         String nationality = txtNationality.getText();
@@ -119,7 +126,6 @@ public class EditPassengerController implements Initializable {
         Gender gender = Gender.valueOf(String.valueOf(cbGender.getSelectionModel().getSelectedItem()));
         ClassType classType = ClassType.valueOf(String.valueOf(cbClassType.getSelectionModel().getSelectedItem()));
 
-//        Passenger newPassenger = new Passenger();
         if (getPassenger() != null) {
             passenger.setId(getPassenger().getId());
         }
@@ -132,7 +138,6 @@ public class EditPassengerController implements Initializable {
         passenger.setClassType(classType);
         passenger.setFlight(flight);
 
-//        setPassenger(passenger);
         actionClose(actionEvent);
     }
 
@@ -144,7 +149,6 @@ public class EditPassengerController implements Initializable {
                 cbClassType.getSelectionModel().getSelectedItem() == null
                 ) {
             DialogManager.showErrorDialog(resources.getString("dm.error"), resources.getString("main.validData"));
-            System.out.println("not valid passenger");
             return false;
         }
         return true;

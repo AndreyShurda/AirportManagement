@@ -88,8 +88,6 @@ public class PassengerController implements Initializable, ProxyOperations {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-//        System.out.println("PassengerControllerFX initialize() location" + location);
-//        System.out.println("PassengerControllerFX initialize() resources" + resources);
         this.location = location;
         this.resources = resources;
 
@@ -143,15 +141,12 @@ public class PassengerController implements Initializable, ProxyOperations {
             @Override
             public void onChanged(Change<? extends Passenger> c) {
                 updateCountLable();
-//                passengerController.update((Passenger) tablePassengers.getSelectionModel().getSelectedItem());
-//                System.out.println("change");
             }
         });
 
         tablePassengers.setOnMouseClicked((MouseEvent event) -> {
             if (event.getClickCount() == 2) {
                 editRow();
-//                System.out.println("cliked 2");
             }
         });
         tablePassengers.setOnKeyPressed(event -> {
@@ -160,7 +155,6 @@ public class PassengerController implements Initializable, ProxyOperations {
             }
             if (event.getCode().equals(KeyCode.DELETE)) {
                 deleteRow();
-//                updateTable();
             }
         });
 
@@ -180,18 +174,13 @@ public class PassengerController implements Initializable, ProxyOperations {
 
     private void editPassenger() {
         Passenger selectedPassenger = (Passenger) tablePassengers.getSelectionModel().getSelectedItem();
-//        System.out.println(selectedPassenger);
         int selectedIndex = tablePassengers.getSelectionModel().getSelectedIndex();
         editPassengerController.setPassenger(selectedPassenger);
         showDialog();
         Passenger passengerEdit = editPassengerController.getPassenger();
-//        System.out.println("editRow" + passengerEdit);
-//        System.out.println("selectedPassenger" + passengerEdit);
-//        if (!selectedPassenger.equals(passengerEdit)) {
-//            System.out.println("save");
+
         passengerService.update(passengerEdit);
         passengers.set(selectedIndex, passengerEdit);
-//        }
     }
 
     private void showDialog() {
@@ -207,8 +196,6 @@ public class PassengerController implements Initializable, ProxyOperations {
         editPassengerController.setPassenger(new Passenger());
         showDialog();
         Passenger newPassenger = editPassengerController.getPassenger();
-        System.out.println(newPassenger);
-        System.out.println(newPassenger.hashCode());
         if (newPassenger.hashCode() != 0) {
             passengerService.add(newPassenger);
             updateTable();
@@ -245,7 +232,6 @@ public class PassengerController implements Initializable, ProxyOperations {
 
     @FXML
     public void search() {
-//        System.out.println("search passenger");
         String text = txtSearch.getText();
         List<Passenger> list = null;
         if (rbByFirstName.isSelected()) {

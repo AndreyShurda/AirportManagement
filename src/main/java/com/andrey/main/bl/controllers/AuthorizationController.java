@@ -82,7 +82,6 @@ public class AuthorizationController implements Initializable {
         }else {
             for (User user : users) {
                 if (user.getName().equals(userName) && CryptoUtils.decode(user.getPassword()).equals(password)) {
-                    System.out.println(user);
                     InitialData.CURRENT_USER = user;
                     return true;
                 } else {

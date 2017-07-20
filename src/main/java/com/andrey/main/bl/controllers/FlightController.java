@@ -166,7 +166,6 @@ public class FlightController implements Initializable, ProxyOperations {
         editFlightController.setDestination(selectedFlight);
         showDialog();
         Destination flightEdit = editFlightController.getDestination();
-        System.out.println("editRow" + flightEdit);
         destinationService.update(flightEdit);
         flights.set(tableFlight.getSelectionModel().getSelectedIndex(), flightEdit);
     }

@@ -4,6 +4,7 @@ package com.andrey.main.bl.controllers;
 import com.andrey.main.bl.Utils.AutoCompleteComboBoxListener;
 import com.andrey.main.bl.Utils.DialogManager;
 import com.andrey.main.bl.Utils.FXUtil;
+import com.andrey.main.bl.Utils.ValidationData;
 import com.andrey.main.bl.services.FlightService;
 import com.andrey.main.dl.data.ClassType;
 import com.andrey.main.dl.models.Flight;
@@ -37,7 +38,6 @@ public class EditTicketController implements Initializable {
     }
 
     public void setTicket(Ticket ticket) {
-        System.out.println(ticket);
         initFlightNumber();
         this.ticket = ticket;
 
@@ -85,7 +85,10 @@ public class EditTicketController implements Initializable {
         if (!isValidTicket()) {
             return;
         }
-        Flight flight = txtIdFlight.getItems().get(txtIdFlight.getSelectionModel().getSelectedIndex());
+        Flight flight = ValidationData.getFlightComboBox(txtIdFlight);
+        if (flight == null) {
+            return;
+        }
         Double price = Double.valueOf(txtPrice.getText());
         ClassType classType = ClassType.valueOf(String.valueOf(cbClassType.getSelectionModel().getSelectedItem()));
 

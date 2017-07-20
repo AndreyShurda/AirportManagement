@@ -116,9 +116,9 @@ public class TicketController implements Initializable, ProxyOperations {
             if (event.getCode().equals(KeyCode.ENTER)) {
                 editRow();
             }
-//            if (event.getCode().equals(KeyCode.DELETE)) {
-//                deleteRow();
-//            }
+            if (event.getCode().equals(KeyCode.DELETE)) {
+                deleteRow();
+            }
         });
 
         txtFrom.textProperty().addListener(new ChangeListener<String>() {
@@ -146,7 +146,6 @@ public class TicketController implements Initializable, ProxyOperations {
 
     private void showDialog() {
         editDialogStage = FXUtil.showDialog(fxmlEdit, editDialogStage);
-//        fxmlLoader.setResources(ResourceBundle.getBundle(PATH_BUNDLES_LOCALE, LOCALE_VALUE));
     }
 
 
@@ -176,7 +175,6 @@ public class TicketController implements Initializable, ProxyOperations {
         editTicketController.setTicket(selectedTicked);
         showDialog();
         Ticket ticketEdit = editTicketController.getTicket();
-//        System.out.println("editRow" + ticketEdit);
         ticketService.update(ticketEdit);
         tickets.set(selectedIndex, ticketEdit);
     }
@@ -217,7 +215,6 @@ public class TicketController implements Initializable, ProxyOperations {
         if (from == 0 && to == 0) {
             tickets.addAll(ticketService.getAll());
         }
-//        tickets.addAll(searchService.searchByPrice(c -> (c.getPrice() >= from && c.getPrice() <= to)));
         tickets.addAll(ticketService.searchByPrice(from, to));
     }
 
