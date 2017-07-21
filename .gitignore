@@ -1,3 +1,4 @@
-.idea
+.idea/
 target/
 MavenAirportHibernetLog4j.iml
+out/
