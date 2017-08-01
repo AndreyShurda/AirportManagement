@@ -1,5 +1,3 @@
-CREATE DATABASE hibernate_test;
-
 INSERT INTO Flight
     (number)
 VALUES
