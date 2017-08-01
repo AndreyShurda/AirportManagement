@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/MavenAirportHibernetLog4j.iml" filepath="$PROJECT_DIR$/MavenAirportHibernetLog4j.iml" />
+      <module fileurl="file://$PROJECT_DIR$/AirportManagement.iml" filepath="$PROJECT_DIR$/AirportManagement.iml" />
     </modules>
   </component>
 </project>

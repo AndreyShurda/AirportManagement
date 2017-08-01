@@ -22,10 +22,12 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
+        <module name="AirportManagement" />
         <module name="MavenAirportHibernetLog4j" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="AirportManagement" target="1.8" />
       <module name="MavenAirportHibernetLog4j" target="1.8" />
     </bytecodeTargetLevel>
   </component>
