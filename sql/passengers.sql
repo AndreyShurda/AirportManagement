@@ -1,4 +1,4 @@
-INSERT INTO Passenger
+INSERT INTO passenger
 (birthday, classType, firstName, gender, lastName, nationality, passport, flight_id)
 VALUES
 ('1989-07-21',1,'Andrii',0,'Shurda','United Kingdom','RS1234',2),

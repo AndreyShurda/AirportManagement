@@ -1,6 +1,6 @@
-INSERT INTO Departures
+INSERT INTO departures
     (city, date, gate, status, terminal, flight_id)
-VALUES 
+VALUES
 ('Dalaman','2017-08-03 09:30:00','1',1,'A',61),
 ('Sharm El-Sheikh','2017-08-03 09:30:00','2',1,'A',60),
 ('Athens','2017-08-03 09:30:00','3',1,'A',59),

@@ -8,14 +8,14 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="400.0" minWidth="850.0"
-      xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.andrey.main.bl.controllers.MainController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="400.0" minWidth="850.0" xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.andrey.main.bl.controllers.MainController">
     <children>
 
         <!--<fx:include fx:id="mainMenu" source="menu.fxml"/>-->
@@ -24,37 +24,128 @@
             <menus>
                 <Menu mnemonicParsing="false" text="%menu.file">
                     <items>
-                        <MenuItem mnemonicParsing="false" onAction="#closeApp" text="%menu.file.close"/>
-                        <MenuItem mnemonicParsing="false" onAction="#login" text="%menu.file.login"/>
+                        <MenuItem mnemonicParsing="false" onAction="#login" text="%menu.file.login">
+                            <graphic>
+                                <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="/images/menu/ChangeUser.png" />
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </MenuItem>
+                        <MenuItem mnemonicParsing="false" onAction="#closeApp" text="%menu.file.close">
+                            <graphic>
+                                <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="/images/menu/Shutdown.png" />
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </MenuItem>
                     </items>
                 </Menu>
                 <Menu fx:id="menuEdit" mnemonicParsing="false" text="%menu.edit">
                     <items>
-                        <MenuItem mnemonicParsing="false" onAction="#add" text="%menu.edit.add"/>
-                        <MenuItem mnemonicParsing="false" onAction="#edit" text="%menu.edit.edit"/>
-                        <MenuItem fx:id="menuEditDelete" mnemonicParsing="false" onAction="#delete"
-                                  text="%menu.edit.delete"/>
+                        <MenuItem mnemonicParsing="false" onAction="#add" text="%menu.edit.add">
+                            <graphic>
+                                <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="/images/menu/newItem.png" />
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </MenuItem>
+                        <MenuItem mnemonicParsing="false" onAction="#edit" text="%menu.edit.edit">
+                            <graphic>
+                                <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="/images/menu/editItem.png" />
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </MenuItem>
+                        <MenuItem fx:id="menuEditDelete" mnemonicParsing="false" onAction="#delete" text="%menu.edit.delete">
+                            <graphic>
+                                <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="/images/menu/deleteItem.png" />
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </MenuItem>
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="%menu.view">
                     <items>
-                        <CheckMenuItem fx:id="checkItemFlights" mnemonicParsing="false" onAction="#showFlights"
-                                       text="%flights"/>
-                        <CheckMenuItem fx:id="checkItemPassengers" mnemonicParsing="false" onAction="#showPassengers"
-                                       text="%passengers"/>
-                        <CheckMenuItem fx:id="checkItemTickets" mnemonicParsing="false" onAction="#showTickets"
-                                       text="%tickets"/>
+                        <CheckMenuItem fx:id="checkItemFlights" mnemonicParsing="false" onAction="#showFlights" text="%flights">
+                            <graphic>
+                                <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="/images/menu/Airport-48.png" />
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </CheckMenuItem>
+                        <CheckMenuItem fx:id="checkItemPassengers" mnemonicParsing="false" onAction="#showPassengers" text="%passengers">
+                            <graphic>
+                                <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="/images/menu/FlightSeat.png" />
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </CheckMenuItem>
+                        <CheckMenuItem fx:id="checkItemTickets" mnemonicParsing="false" onAction="#showTickets" text="%tickets">
+                            <graphic>
+                                <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="/images/menu/Ticket.png" />
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </CheckMenuItem>
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="%menu.help">
                     <items>
                         <Menu mnemonicParsing="false" text="%menu.help.language">
+                            <graphic>
+                                <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="/images/menu/Language.png" />
+                                    </image>
+                                </ImageView>
+                            </graphic>
                             <items>
-                                <MenuItem mnemonicParsing="false" onAction="#setEnglishLocale" text="English"/>
-                                <MenuItem mnemonicParsing="false" onAction="#setRussianLocale" text="Руский"/>
+                                <MenuItem mnemonicParsing="false" onAction="#setEnglishLocale" text="English">
+                                    <graphic>
+                                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                            <image>
+                                                <Image url="/images/menu/languageEN.png" />
+                                            </image>
+                                        </ImageView>
+                                    </graphic>
+                                </MenuItem>
+                                <MenuItem mnemonicParsing="false" onAction="#setRussianLocale" text="Руский">
+                                    <graphic>
+                                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                            <image>
+                                                <Image url="/images/menu/languageRU.png" />
+                                            </image>
+                                        </ImageView>
+                                    </graphic>
+                                </MenuItem>
                             </items>
                         </Menu>
-                        <MenuItem mnemonicParsing="false" text="%menu.help.about"/>
+                        <MenuItem mnemonicParsing="false" text="%menu.help.about">
+                            <graphic>
+                                <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="/images/menu/Info.png" />
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </MenuItem>
                     </items>
                 </Menu>
             </menus>
@@ -65,51 +156,52 @@
                     <children>
                         <HBox>
                             <HBox.margin>
-                                <Insets left="10.0" top="5.0"/>
+                                <Insets left="10.0" top="5.0" />
                             </HBox.margin>
                             <children>
-                                <Label text="%current_user_name">
+                                <!--<Label text="%current_user_name">-->
+                                <Label>
+                                    <graphic>
+                                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                            <image>
+                                                <Image url="/images/buttons/user.png" />
+                                            </image>
+                                        </ImageView>
+                                    </graphic>
                                     <HBox.margin>
-                                        <Insets right="5.0"/>
+                                        <Insets right="5.0" />
                                     </HBox.margin>
                                 </Label>
                                 <Label fx:id="lbUser" text="user">
                                     <HBox.margin>
-                                        <Insets right="5.0"/>
+                                        <Insets right="5.0" top="7.0" />
                                     </HBox.margin>
                                     <font>
-                                        <Font name="System Bold" size="12.0"/>
+                                        <Font name="System Bold" size="12.0" />
                                     </font>
                                 </Label>
                             </children>
                         </HBox>
                     </children>
                 </Group>
-                <!--<Group AnchorPane.leftAnchor="200.0">-->
-                <!--<children>-->
-                <!--<Button onAction="#changeToAdmin" text="change to ADMIN" />-->
-                <!--<Button layoutX="125.0" onAction="#changeToStaff" text="change to STAFF" />-->
-                <!--<Button layoutX="240.0" onAction="#changeToGuest" text="change to GUEST" />-->
-                <!--</children>-->
-                <!--</Group>-->
                 <Group AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="5.0">
                     <children>
                         <HBox layoutX="20.0" layoutY="15.0">
                             <HBox.margin>
-                                <Insets left="40.0" top="5.0"/>
+                                <Insets left="40.0" top="5.0" />
                             </HBox.margin>
                             <children>
                                 <Label text="%сurrent_user_role">
                                     <HBox.margin>
-                                        <Insets left="5.0"/>
+                                        <Insets left="5.0" />
                                     </HBox.margin>
                                 </Label>
                                 <Label fx:id="lbRole" text="role">
                                     <font>
-                                        <Font name="System Bold" size="12.0"/>
+                                        <Font name="System Bold" size="12.0" />
                                     </font>
                                     <HBox.margin>
-                                        <Insets left="5.0"/>
+                                        <Insets left="5.0" />
                                     </HBox.margin>
                                 </Label>
                             </children>
@@ -121,36 +213,9 @@
 
         <TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
             <VBox.margin>
-                <Insets left="10.0" right="10.0" top="10.0"/>
+                <Insets left="10.0" right="10.0" top="10.0" />
             </VBox.margin>
             <tabs>
-                <!--<Tab fx:id="tabFlights" onCloseRequest="#tabCloseFlights" text="%flights">-->
-                <!--<content>-->
-                <!--<fx:include fx:id="viewFlights" source="flights.fxml"/>-->
-                <!--</content>-->
-                <!--</Tab>-->
-                <!--<Tab fx:id="tabPassengers"  text="%passengers">-->
-                <!--<content>-->
-                <!--<fx:include fx:id="viewPassengers" source="passengers.fxml"/>-->
-                <!--</content>-->
-
-                <!--</Tab>-->
-                <!--<Tab fx:id="tabTickets" text="%tickets">-->
-                <!--<content>-->
-                <!--<fx:include source="tickets.fxml"/>-->
-                <!--</content>-->
-                <!--</Tab>-->
-                <!--<Tab text="passengersTest">-->
-                <!--<content>-->
-                <!--<AnchorPane prefHeight="200.0" prefWidth="200.0">-->
-                <!--<children>-->
-                <!--<ListView prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0"-->
-                <!--AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"-->
-                <!--AnchorPane.topAnchor="0.0"/>-->
-                <!--</children>-->
-                <!--</AnchorPane>-->
-                <!--</content>-->
-                <!--</Tab>-->
             </tabs>
 
         </TabPane>

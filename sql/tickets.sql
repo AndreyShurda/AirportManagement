@@ -1,4 +1,4 @@
-INSERT INTO Ticket
+INSERT INTO ticket
     (classType, price, flight_id)
 VALUES
 (0,45.5,34),

@@ -51,7 +51,7 @@ public class CreateUserController implements Initializable {
         } else if (!isValidUserName(txtUser.getText())) {
             DialogManager.showErrorDialog(resources.getString("dm.info"), resources.getString("createUser.valid.user.name"));
             return;
-        }else if (!isValidUserPassword(txtPassword.getText())){
+        } else if (!isValidUserPassword(txtPassword.getText())) {
             DialogManager.showErrorDialog(resources.getString("dm.info"), resources.getString("createUser.valid.user.password"));
             return;
         }
@@ -59,14 +59,23 @@ public class CreateUserController implements Initializable {
         String userName = txtUser.getText();
         String password = txtPassword.getText();
         PermissionAction role = cbRole.getSelectionModel().getSelectedItem();
+
+        boolean isUserExist = userService.getAll().stream()
+                .anyMatch(userIsExist -> userIsExist.getName().equals(userName));
+
+        if (isUserExist) {
+            DialogManager.showErrorDialog(resources.getString("dm.error"), resources.getString("createUser.user.exist"));
+            return;
+        }
+
         User user = new User();
         user.setName(userName);
         user.setPassword(CryptoUtils.encode(password));
         user.setPermissionAction(role);
-        if (!userService.getAll().contains(user)) {
-            userService.add(user);
-            actionClose();
-        }
+
+        userService.add(user);
+        actionClose();
+
     }
 
     private boolean isValidUser() {

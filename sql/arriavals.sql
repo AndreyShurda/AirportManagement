@@ -1,4 +1,4 @@
-INSERT INTO Arrivals
+INSERT INTO arrivals
     (city, date, gate, status, terminal, flight_id)
 VALUES
 ('Dalaman','2017-08-03 09:30:00','1',1,'A',1),

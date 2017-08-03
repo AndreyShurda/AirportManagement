@@ -1,0 +1,6 @@
+.iconClose {
+    -fx-background-color: red;
+}
+.iconClose > .label {
+    -fx-graphic: url("images/icons8-Shutdown-50.png");
+}

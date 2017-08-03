@@ -1,4 +1,4 @@
-INSERT INTO Flight
+INSERT INTO flight
     (number)
 VALUES
     ('LO754'),
