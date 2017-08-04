@@ -1,6 +1,7 @@
-.iconClose {
-    -fx-background-color: red;
-}
-.iconClose > .label {
-    -fx-graphic: url("images/icons8-Shutdown-50.png");
+.textField {
+    /*-fx-background-image:url("images/buttons/user.png");*/
+    -fx-background-color: #005797;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: right center;
+    -fx-font-size: 20;
 }
