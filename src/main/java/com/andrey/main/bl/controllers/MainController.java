@@ -9,6 +9,8 @@ import com.andrey.main.ui.FXMain;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
@@ -216,9 +218,9 @@ public class MainController implements Initializable {
 
     @FunctionalInterface
     public interface Command {
+
         void execute(ProxyOperations ProxyOperations);
     }
-
     private void doOperation(Tab tab, Command command, ProxyOperations ProxyOperations) {
         if (tab.isSelected()) {
             command.execute(ProxyOperations);
@@ -262,4 +264,38 @@ public class MainController implements Initializable {
         showTab(tabPane, tabTickets, checkItemTickets);
     }
 
+    @FXML
+    private void aboutApp() {
+        initCreateForm();
+    }
+
+    public void initCreateForm() {
+        Stage primaryStage = new Stage();
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        URL resource = getClass().getResource("/fxml/about.fxml");
+        fxmlLoader.setLocation(resource);
+        fxmlLoader.setResources(ResourceBundle.getBundle(PATH_BUNDLES_LOCALE, LOCALE_VALUE));
+
+        Parent fxmlMain = null;
+        try {
+            fxmlMain = fxmlLoader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        AboutController mainController = fxmlLoader.getController();
+        mainController.setMainStage(primaryStage);
+
+        primaryStage.setTitle(fxmlLoader.getResources().getString("about"));
+        Scene scene = new Scene(fxmlMain);
+
+        primaryStage.setScene(scene);
+        primaryStage.setResizable(false);
+        primaryStage.show();
+
+        primaryStage.focusedProperty().addListener((ov, t, t1) -> {
+            primaryStage.close();
+        });
+
+    }
 }

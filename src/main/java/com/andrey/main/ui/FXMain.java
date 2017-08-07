@@ -43,19 +43,18 @@ public class FXMain extends Application {
 
         primaryStage.setTitle(fxmlLoader.getResources().getString("authorization"));
         Scene scene = new Scene(fxmlMain);
+//        scene.getStylesheets().add(getClass().getResource("/css/menu.css").toExternalForm());
 
+        primaryStage.getIcons().add(new Image("/images/terminal.png"));
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
         primaryStage.setAlwaysOnTop(true);
         primaryStage.show();
 
-        scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-                if (event.isAltDown() && event.isControlDown() && event.isShiftDown()) {
-                    mainController.initCreateForm();
-                    primaryStage.hide();
-                }
+        scene.setOnKeyPressed(event -> {
+            if (event.isAltDown() && event.isControlDown() && event.isShiftDown()) {
+                mainController.initCreateForm();
+                primaryStage.hide();
             }
         });
     }

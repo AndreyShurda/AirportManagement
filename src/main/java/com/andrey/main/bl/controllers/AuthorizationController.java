@@ -14,6 +14,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -117,11 +118,7 @@ public class AuthorizationController implements Initializable {
         primaryStage.setResizable(false);
         primaryStage.show();
 
-        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            public void handle(WindowEvent we) {
-                FXMain.primaryStage.show();
-            }
-        });
+        primaryStage.setOnCloseRequest(we -> FXMain.primaryStage.show());
     }
 
     private Stage initRootLayout() throws IOException {
@@ -139,6 +136,7 @@ public class AuthorizationController implements Initializable {
         mainController.setMainStage(primaryStage);
 
 
+        primaryStage.getIcons().add(new Image("/images/terminal.png"));
         primaryStage.setTitle(fxmlLoader.getResources().getString("airport_management"));
 
         Scene scene = new Scene(rootLayout);

@@ -1,7 +1,9 @@
+.textField:focused {
+    -fx-background-image: inherit;
+}
+
 .textField {
-    /*-fx-background-image:url("images/buttons/user.png");*/
-    -fx-background-color: #005797;
+    -fx-background-image: url("/images/fields/user.png");
     -fx-background-repeat: no-repeat;
     -fx-background-position: right center;
-    -fx-font-size: 20;
 }
