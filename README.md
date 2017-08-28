@@ -21,3 +21,12 @@ The project uses such technologies:
  - Hibernate
  - MySQL
  - Maven
+ 
+![My image](https://github.com/AndreyShurda/AirportManagement/blob/master/imagesApp/login.png)
+
+![My image](https://github.com/AndreyShurda/AirportManagement/blob/master/imagesApp/registration.png)
+![My image](https://github.com/AndreyShurda/AirportManagement/blob/master/imagesApp/Arrivals.png)
+![My image](https://github.com/AndreyShurda/AirportManagement/blob/master/imagesApp/passengers.png)
+![My image](https://github.com/AndreyShurda/AirportManagement/blob/master/imagesApp/editPassenger.png)
+![My image](https://github.com/AndreyShurda/AirportManagement/blob/master/imagesApp/SecurityLayer.png)
+![My image](https://github.com/AndreyShurda/AirportManagement/blob/master/imagesApp/changeLanguage.png)
